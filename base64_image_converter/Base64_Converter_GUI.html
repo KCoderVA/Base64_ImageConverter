@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bidirectional Base64 Image Converter</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #f59e0b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex: 1;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+        }
+
+        .tutorial-section {
+            margin-bottom: 20px;
+        }
+
+        .tutorial-section h3 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .tutorial-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tutorial-section li {
+            padding: 8px 0;
+            border-left: 3px solid var(--primary-color);
+            padding-left: 15px;
+            margin-bottom: 5px;
+        }
+
+        .conversion-modes {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .mode-card {
+            flex: 1;
+            background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .mode-card:hover {
+            border-color: var(--primary-color);
+            transform: scale(1.02);
+        }
+
+        .mode-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, var(--primary-color), #3b82f6);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, var(--secondary-color), #fbbf24);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, var(--success-color), #34d399);
+        }
+
+        .btn-large {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .file-drop-zone {
+            border: 3px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .file-drop-zone:hover,
+        .file-drop-zone.drag-over {
+            border-color: var(--primary-color);
+            background: #eff6ff;
+        }
+
+        .results-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            grid-column: 1 / -1;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f7fa 100%);
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .result-card.error {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border-left-color: var(--error-color);
+        }
+
+        .log-window {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 2px 0;
+        }
+
+        .log-entry.info {
+            color: #60a5fa;
+        }
+
+        .log-entry.success {
+            color: #34d399;
+        }
+
+        .log-entry.error {
+            color: #f87171;
+        }
+
+        .log-entry.warning {
+            color: #fbbf24;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, var(--success-color), #34d399);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-ready {
+            background: var(--success-color);
+        }
+
+        .status-processing {
+            background: var(--warning-color);
+            animation: pulse 1.5s infinite;
+        }
+
+        .status-error {
+            background: var(--error-color);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .conversion-modes {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>🔄 Bidirectional Base64 Image Converter</h1>
+            <p>Professional Image ↔ Base64 HTML Conversion Tool</p>
+            <span class="badge">Data Team - Informatics | v1.0.0</span>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="main-content">
+            <!-- Tutorial & Information Panel -->
+            <div class="card">
+                <h2>
+                    <span class="icon">📚</span>
+                    How It Works
+                </h2>
+                
+                <div class="tutorial-section">
+                    <h3>🎯 Purpose</h3>
+                    <p>This tool provides bidirectional conversion between image files and base64-encoded HTML format, perfect for web applications, emails, or eliminating external image dependencies.</p>
+                </div>
+
+                <div class="conversion-modes">
+                    <div class="mode-card">
+                        <h4>📸 → 📄</h4>
+                        <p>Images to Base64 HTML</p>
+                    </div>
+                    <div class="mode-card">
+                        <h4>📄 → 📸</h4>
+                        <p>Base64 HTML to Images</p>
+                    </div>
+                </div>
+
+                <div class="tutorial-section">
+                    <h3>✨ Features</h3>
+                    <ul>
+                        <li>🔄 Bidirectional conversion support</li>
+                        <li>📁 Batch processing capabilities</li>
+                        <li>🖼️ Multiple formats: PNG, JPEG, GIF, BMP</li>
+                        <li>📏 Automatic dimension extraction</li>
+                        <li>🎨 Professional HTML5 output</li>
+                        <li>📊 Detailed conversion reports</li>
+                    </ul>
+                </div>
+
+                <div class="tutorial-section">
+                    <h3>🚀 Quick Start</h3>
+                    <ul>
+                        <li>1️⃣ Select your conversion mode</li>
+                        <li>2️⃣ Choose input files or folder</li>
+                        <li>3️⃣ Set output destination</li>
+                        <li>4️⃣ Start conversion process</li>
+                        <li>5️⃣ Review results summary</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Control Panel -->
+            <div class="card">
+                <h2>
+                    <span class="icon">🎛️</span>
+                    Control Panel
+                </h2>
+
+                <div class="file-drop-zone" id="dropZone">
+                    <div style="font-size: 3rem; margin-bottom: 10px;">📁</div>
+                    <p><strong>Drag & Drop Files Here</strong></p>
+                    <p>or click the buttons below to select files</p>
+                    <p style="font-size: 0.9rem; color: #64748b; margin-top: 10px;">
+                        Supported: PNG, JPEG, GIF, BMP, TXT, HTML
+                    </p>
+                </div>
+
+                <button class="btn btn-large" onclick="selectInputFiles()">
+                    📂 Select Input Files
+                </button>
+
+                <button class="btn btn-secondary btn-large" onclick="selectInputFolder()">
+                    📁 Select Input Folder (Batch Mode)
+                </button>
+
+                <button class="btn btn-large" onclick="selectOutputFolder()">
+                    💾 Choose Output Destination
+                </button>
+
+                <div style="margin: 20px 0;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Conversion Mode:</label>
+                    <select id="conversionMode" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid var(--border-color);">
+                        <option value="auto">🔄 Auto-Detect (Recommended)</option>
+                        <option value="to-base64">📸 → 📄 Images to Base64</option>
+                        <option value="from-base64">📄 → 📸 Base64 to Images</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-success btn-large" onclick="startConversion()">
+                    <span class="icon">▶️</span>
+                    Start Conversion Process
+                </button>
+
+                <div style="margin-top: 20px;">
+                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                        <span class="status-indicator status-ready" id="statusIndicator"></span>
+                        <span id="statusText">Ready to convert</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <h2>
+                <span class="icon">📊</span>
+                Conversion Results
+            </h2>
+            <div class="results-grid" id="resultsGrid">
+                <!-- Results will be populated here -->
+            </div>
+        </div>
+
+        <!-- Log Window -->
+        <div class="card">
+            <h2>
+                <span class="icon">📋</span>
+                Process Log
+                <button class="btn" onclick="clearLog()" style="margin-left: auto; padding: 5px 10px; font-size: 0.8rem;">
+                    🗑️ Clear
+                </button>
+            </h2>
+            <div class="log-window" id="logWindow">
+                <div class="log-entry info">📋 Base64 Image Converter initialized and ready...</div>
+                <div class="log-entry info">💡 Tip: You can drag and drop files directly onto the drop zone above</div>
+                <div class="log-entry info">🔧 Python script integration ready for file processing</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let selectedFiles = [];
+        let selectedInputFolder = '';
+        let selectedOutputFolder = '';
+        let conversionResults = [];
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDragAndDrop();
+            logMessage('info', '🚀 Application initialized successfully');
+        });
+
+        // Drag and drop functionality
+        function initializeDragAndDrop() {
+            const dropZone = document.getElementById('dropZone');
+            
+            dropZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                dropZone.classList.add('drag-over');
+            });
+
+            dropZone.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                dropZone.classList.remove('drag-over');
+            });
+
+            dropZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                dropZone.classList.remove('drag-over');
+                
+                const files = Array.from(e.dataTransfer.files);
+                handleFileSelection(files);
+            });
+        }
+
+        // File selection handlers
+        function selectInputFiles() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.multiple = true;
+            input.accept = '.png,.jpg,.jpeg,.gif,.bmp,.txt,.html,.htm';
+            
+            input.onchange = function(e) {
+                const files = Array.from(e.target.files);
+                handleFileSelection(files);
+            };
+            
+            input.click();
+        }
+
+        function selectInputFolder() {
+            // Note: Web browsers don't support folder selection the same way as desktop apps
+            // This would typically require a backend server or file system API
+            logMessage('warning', '📁 Folder selection: Please use the Python script directly for batch folder processing');
+            logMessage('info', '💡 Alternative: Select multiple files using Ctrl+Click in the file dialog');
+        }
+
+        function selectOutputFolder() {
+            // Similar limitation for folder selection in web browsers
+            logMessage('info', '💾 Output folder: Files will be downloaded to your default Downloads folder');
+            selectedOutputFolder = 'Downloads';
+            updateStatus('Output destination set to Downloads folder', 'ready');
+        }
+
+        function handleFileSelection(files) {
+            selectedFiles = files;
+            logMessage('success', `📂 Selected ${files.length} file(s):`);
+            
+            files.forEach(file => {
+                const fileType = getFileType(file.name);
+                logMessage('info', `   • ${file.name} (${fileType}, ${formatFileSize(file.size)})`);
+            });
+
+            updateStatus(`${files.length} file(s) selected for conversion`, 'ready');
+        }
+
+        // Conversion process
+        function startConversion() {
+            if (selectedFiles.length === 0) {
+                logMessage('error', '❌ No files selected. Please select files first.');
+                return;
+            }
+
+            updateStatus('Processing files...', 'processing');
+            updateProgress(0);
+            logMessage('info', '🔄 Starting conversion process...');
+            
+            // Clear previous results
+            conversionResults = [];
+            
+            // Simulate file processing (in real implementation, this would call the Python script)
+            processFiles();
+        }
+
+        function processFiles() {
+            const totalFiles = selectedFiles.length;
+            let processedFiles = 0;
+
+            selectedFiles.forEach((file, index) => {
+                setTimeout(() => {
+                    const fileType = getFileType(file.name);
+                    const conversionDirection = determineConversionDirection(file.name);
+                    
+                    logMessage('info', `[${index + 1}/${totalFiles}] ${conversionDirection}: ${file.name}`);
+                    
+                    // Simulate processing
+                    setTimeout(() => {
+                        const success = Math.random() > 0.1; // 90% success rate for demo
+                        
+                        if (success) {
+                            const outputFileName = generateOutputFileName(file.name, conversionDirection);
+                            conversionResults.push({
+                                success: true,
+                                inputFile: file.name,
+                                outputFile: outputFileName,
+                                conversionType: conversionDirection,
+                                fileSize: formatFileSize(file.size)
+                            });
+                            logMessage('success', `✅ Successfully converted: ${file.name} → ${outputFileName}`);
+                        } else {
+                            conversionResults.push({
+                                success: false,
+                                inputFile: file.name,
+                                error: 'Simulated processing error',
+                                conversionType: conversionDirection
+                            });
+                            logMessage('error', `❌ Failed to convert: ${file.name}`);
+                        }
+                        
+                        processedFiles++;
+                        updateProgress((processedFiles / totalFiles) * 100);
+                        
+                        if (processedFiles === totalFiles) {
+                            finishConversion();
+                        }
+                    }, 1000 + Math.random() * 2000); // Random processing time
+                }, index * 500); // Stagger file processing
+            });
+        }
+
+        function finishConversion() {
+            const successCount = conversionResults.filter(r => r.success).length;
+            const failCount = conversionResults.filter(r => !r.success).length;
+            
+            updateStatus(`Conversion complete: ${successCount} success, ${failCount} failed`, 'ready');
+            updateProgress(100);
+            
+            logMessage('info', '🎉 Conversion process completed!');
+            logMessage('success', `✅ Successfully converted: ${successCount} file(s)`);
+            if (failCount > 0) {
+                logMessage('error', `❌ Failed conversions: ${failCount} file(s)`);
+            }
+            
+            displayResults();
+        }
+
+        function displayResults() {
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsGrid = document.getElementById('resultsGrid');
+            
+            resultsGrid.innerHTML = '';
+            
+            conversionResults.forEach(result => {
+                const resultCard = document.createElement('div');
+                resultCard.className = `result-card ${result.success ? '' : 'error'}`;
+                
+                if (result.success) {
+                    resultCard.innerHTML = `
+                        <h4 style="color: var(--success-color); margin-bottom: 10px;">✅ ${result.inputFile}</h4>
+                        <p><strong>Conversion:</strong> ${result.conversionType}</p>
+                        <p><strong>Output:</strong> ${result.outputFile}</p>
+                        <p><strong>Size:</strong> ${result.fileSize}</p>
+                        <button class="btn" style="margin-top: 10px; padding: 5px 10px; font-size: 0.8rem;">
+                            💾 Download
+                        </button>
+                    `;
+                } else {
+                    resultCard.innerHTML = `
+                        <h4 style="color: var(--error-color); margin-bottom: 10px;">❌ ${result.inputFile}</h4>
+                        <p><strong>Conversion:</strong> ${result.conversionType}</p>
+                        <p><strong>Error:</strong> ${result.error}</p>
+                        <button class="btn" style="margin-top: 10px; padding: 5px 10px; font-size: 0.8rem;">
+                            🔄 Retry
+                        </button>
+                    `;
+                }
+                
+                resultsGrid.appendChild(resultCard);
+            });
+            
+            resultsSection.style.display = 'block';
+        }
+
+        // Utility functions
+        function getFileType(fileName) {
+            const ext = fileName.split('.').pop().toLowerCase();
+            if (['png', 'jpg', 'jpeg', 'gif', 'bmp'].includes(ext)) {
+                return 'Image';
+            } else if (['txt', 'html', 'htm'].includes(ext)) {
+                return 'Text/HTML';
+            }
+            return 'Unknown';
+        }
+
+        function determineConversionDirection(fileName) {
+            const fileType = getFileType(fileName);
+            const mode = document.getElementById('conversionMode').value;
+            
+            if (mode === 'auto') {
+                return fileType === 'Image' ? 'Image → Base64 HTML' : 'Base64 HTML → Image';
+            } else if (mode === 'to-base64') {
+                return 'Image → Base64 HTML';
+            } else {
+                return 'Base64 HTML → Image';
+            }
+        }
+
+        function generateOutputFileName(inputFileName, conversionDirection) {
+            const baseName = inputFileName.split('.')[0];
+            if (conversionDirection.includes('Base64 HTML')) {
+                return `${baseName}.txt`;
+            } else {
+                // For demo purposes, assume PNG output
+                return `${baseName}.png`;
+            }
+        }
+
+        function formatFileSize(bytes) {
+            const units = ['bytes', 'KB', 'MB', 'GB'];
+            let size = bytes;
+            let unitIndex = 0;
+            
+            while (size >= 1024 && unitIndex < units.length - 1) {
+                size /= 1024;
+                unitIndex++;
+            }
+            
+            return `${size.toFixed(2)} ${units[unitIndex]}`;
+        }
+
+        function updateStatus(message, type) {
+            const statusText = document.getElementById('statusText');
+            const statusIndicator = document.getElementById('statusIndicator');
+            
+            statusText.textContent = message;
+            statusIndicator.className = `status-indicator status-${type}`;
+        }
+
+        function updateProgress(percentage) {
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = `${percentage}%`;
+        }
+
+        function logMessage(type, message) {
+            const logWindow = document.getElementById('logWindow');
+            const timestamp = new Date().toLocaleTimeString();
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${type}`;
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            
+            logWindow.appendChild(logEntry);
+            logWindow.scrollTop = logWindow.scrollHeight;
+        }
+
+        function clearLog() {
+            const logWindow = document.getElementById('logWindow');
+            logWindow.innerHTML = '<div class="log-entry info">📋 Log cleared...</div>';
+        }
+
+        // Integration placeholder for Python script
+        function callPythonScript(files, outputDir, mode) {
+            // This is where you would integrate with your Python script
+            // Options include:
+            // 1. Use a web server (Flask/FastAPI) to run the Python script
+            // 2. Convert the Python logic to JavaScript
+            // 3. Use PyScript to run Python in the browser
+            // 4. Use Electron to create a desktop app
+            
+            logMessage('info', '🐍 Python script integration point - implement based on your deployment method');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+# Base64 Image Converter - Requirements
+
+# Build and packaging dependencies
+wheel>=0.37.0
+setuptools>=50.0.0
+
+# Core dependencies (Python standard library modules - no installation needed)
+# - base64: Built-in module for base64 encoding/decoding
+# - os: Built-in module for file system operations
+# - mimetypes: Built-in module for MIME type detection
+# - re: Built-in module for regular expressions
+# - tkinter: Usually included with Python installations
+
+# Web interface dependencies (Python standard library - no installation needed)
+# - http.server: Built-in module for HTTP server functionality
+# - json: Built-in module for JSON handling
+# - urllib.parse: Built-in module for URL parsing
+# - threading: Built-in module for multi-threading
+# - tempfile: Built-in module for temporary file handling
+# - shutil: Built-in module for file operations
+# - webbrowser: Built-in module for opening web browsers
+
+# Development dependencies (optional, for developers)
+# Uncomment the lines below if you want to install development tools:
+
+# pytest>=6.0.0          # Testing framework
+# pytest-cov>=2.0.0      # Coverage reporting for tests
+# black>=21.0.0           # Code formatter
+# flake8>=3.8.0           # Code linter
+# mypy>=0.800             # Type checker
+
+# Note: This project is designed to work with Python's standard library only.
+# No external dependencies are required for normal operation.
