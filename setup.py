@@ -1,109 +1,99 @@
 #!/usr/bin/env python3
 """
-Setup script for the Bidirectional Base64 Image Converter
+Simple setup script to prepare the Base64 Image Converter for use.
 
-This script handles the installation and packaging of the Base64 Image Converter
-utility, including both the command-line interface and web-based GUI.
+This script ensures all dependencies are installed and the project is ready to run.
 """
 
-from setuptools import setup, find_packages
 import os
+import sys
+import subprocess
 
-# Read the contents of your README file
-this_directory = os.path.abspath(os.path.dirname(__file__))
-with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
+def run_command(cmd, description):
+    """Run a command and return success status."""
+    print(f"\n🔧 {description}...")
+    print(f"   Command: {cmd}")
+    
+    try:
+        result = subprocess.run(cmd, shell=True, check=True, capture_output=True, text=True)
+        print(f"   ✅ Success!")
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"   ❌ Failed: {e}")
+        if e.stderr:
+            print(f"   Error details: {e.stderr}")
+        return False
 
-# Read requirements from requirements.txt if it exists
-def read_requirements():
-    requirements_path = os.path.join(this_directory, 'requirements.txt')
-    if os.path.exists(requirements_path):
-        with open(requirements_path, 'r') as f:
-            return [line.strip() for line in f if line.strip() and not line.startswith('#')]
-    return []
+def main():
+    """Main setup function."""
+    print("=" * 60)
+    print("  BASE64 IMAGE CONVERTER - QUICK SETUP")
+    print("=" * 60)
+    print()
+    print("This script will prepare your environment for the Base64 Image Converter.")
+    print()
+    
+    # Check if we're in the right directory
+    if not os.path.exists('project/build/setup.py') or not os.path.exists('project/base64_image_converter'):
+        print("❌ Error: This doesn't appear to be the Base64 Image Converter project directory.")
+        print("   Please run this script from the project root directory.")
+        print("   Looking for: project/build/setup.py and project/base64_image_converter/ folder")
+        input("Press Enter to exit...")
+        sys.exit(1)
+    
+    print("✅ Project files found!")
+    
+    # Install basic requirements
+    print("\n📦 Installing/upgrading build tools...")
+    
+    commands = [
+        ("py -m pip install --upgrade pip", "Upgrading pip"),
+        ("py -m pip install --upgrade setuptools", "Installing setuptools"),
+        ("py -m pip install --upgrade wheel", "Installing wheel"),
+    ]
+    
+    success_count = 0
+    for cmd, desc in commands:
+        if run_command(cmd, desc):
+            success_count += 1
+    
+    # Install the package in development mode
+    if success_count >= 2:
+        print("\n📦 Installing Base64 Image Converter package...")
+        if run_command("py -m pip install -e project/", "Installing package in development mode"):
+            success_count += 1
+            package_installed = True
+        else:
+            package_installed = False
+    else:
+        package_installed = False
+    
+    print(f"\n📊 Setup Results: {success_count}/{len(commands) + (1 if success_count >= 2 else 0)} successful")
+    
+    if package_installed:
+        print("\n🎉 Complete setup successful!")
+        print("\nYou can now use the Base64 Image Converter:")
+        print("   • base64-converter-gui       # Launch web interface")
+        print("   • base64-converter           # Command line interface") 
+        print("   • base64-converter-web       # Direct web server")
+        print("\nOr run the GUI launcher directly:")
+        print("   • python LAUNCH_GUI.py")
+    elif success_count >= 2:  # At least pip and one other tool
+        print("\n✅ Environment setup complete!")
+        print("\nYou can now:")
+        print("   • Install package: pip install -e project/")
+        print("   • Run the GUI launcher: python LAUNCH_GUI.py")
+        print("   • Build package: python project/build/build_and_test.py")
+        print("\nFor easier use after installation:")
+        print("   • base64-converter-gui       # Launch web interface")
+        print("   • base64-converter           # Command line interface")
+        print("   • base64-converter-web       # Direct web server")
+    else:
+        print("\n⚠️  Some dependencies failed to install.")
+        print("The converter might still work with basic functionality.")
+    
+    print("\n" + "=" * 60)
+    input("Press Enter to exit...")
 
-setup(
-    name="base64-image-converter",
-    version="1.0.0",
-    author="KCoderVA",
-    author_email="developer@kcoder.dev",
-    description="Bidirectional converter for images and base64-encoded HTML format",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    url="https://github.com/KCoderVA/Base64_ImageConverter",
-    project_urls={
-        "Bug Tracker": "https://github.com/KCoderVA/Base64_ImageConverter/issues",
-        "Documentation": "https://github.com/KCoderVA/Base64_ImageConverter/wiki",
-        "Source Code": "https://github.com/KCoderVA/Base64_ImageConverter",
-        "Download": "https://github.com/KCoderVA/Base64_ImageConverter/releases",
-    },
-    classifiers=[
-        "Development Status :: 5 - Production/Stable",
-        "Intended Audience :: Developers",
-        "Intended Audience :: Healthcare Industry",
-        "Topic :: Multimedia :: Graphics :: Graphics Conversion",
-        "Topic :: Software Development :: Libraries :: Python Modules",
-        "Topic :: Text Processing :: Markup :: HTML",
-        "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
-        "Operating System :: OS Independent",
-        "Environment :: Console",
-        "Environment :: Web Environment",
-    ],
-    packages=find_packages(),
-    python_requires=">=3.6",
-    install_requires=read_requirements(),
-    extras_require={
-        "dev": [
-            "pytest>=6.0",
-            "pytest-cov>=2.0",
-            "black>=21.0",
-            "flake8>=3.8",
-            "mypy>=0.800",
-        ],
-        "gui": [
-            "tkinter",  # Usually included with Python
-        ],
-    },
-    entry_points={
-        "console_scripts": [
-            "base64-converter=base64_image_converter.convertIMAGE_script:main",
-            "base64-converter-gui=base64_image_converter.launch_gui:main",
-            "base64-converter-web=base64_image_converter.web_bridge:main",
-        ],
-    },
-    include_package_data=True,
-    package_data={
-        "base64_image_converter": [
-            "*.html",
-            "*.css",
-            "*.js",
-        ],
-        "": [
-            "*.md",
-            "*.txt",
-            "Inputs/*",
-            "Outputs/*",
-        ],
-    },
-    zip_safe=False,
-    keywords=[
-        "base64",
-        "image",
-        "converter",
-        "html",
-        "encoding",
-        "decoding",
-        "web",
-        "gui",
-        "bidirectional",
-        "healthcare",
-        "informatics",
-    ],
-)
+if __name__ == "__main__":
+    main()
