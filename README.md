@@ -5,7 +5,7 @@
 Perfect for embedding images directly into HTML emails, web pages, or documents without external file dependencies.
 
 [![Python 3.6+](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE)
 [![GitHub Release](https://img.shields.io/github/v/release/KCoderVA/Base64_ImageConverter)](https://github.com/KCoderVA/Base64_ImageConverter/releases)
 
 ## ✨ Features
@@ -53,7 +53,7 @@ Double-click on: **`LAUNCH_GUI.py`**
 - **`README.md`** - This instruction file
 - **`SETUP.py`** - One-time setup installer
 - **`LAUNCH_GUI.py`** - Application launcher
-- **`LICENSE`** - MIT License terms
+- **`LICENSE`** - AGPL v3 License terms
 - **`project/`** - Technical files and documentation
 
 ## 🆘 Troubleshooting
@@ -74,7 +74,15 @@ https://github.com/KCoderVA/Base64_ImageConverter/issues
 
 ## ⚖️ License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU Affero General Public License v3.0 (AGPL v3) - see the [LICENSE](LICENSE) file for details.
+
+**Key License Information:**
+- **Author**: Kyle J. Coder
+- **Organization**: Advanced Analytics & Informatics, Edward Hines Jr. VA Hospital (v12/578), Veterans Health Administration, Department of Veterans Affairs
+- **Contact**: HinClinicalAnalytics@va.gov
+- **GitHub**: https://github.com/KCoderVA/Base64_ImageConverter
+
+The AGPL v3 license ensures that this software remains free and open source, including when used in network services. If you modify this software and use it in a service accessible over a network, you must provide the source code to users of that service.
 
 ---
 

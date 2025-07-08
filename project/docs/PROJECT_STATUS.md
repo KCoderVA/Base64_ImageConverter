@@ -198,10 +198,16 @@ python build_and_test.py
 
 ## 📞 **Support & Contact**
 
-### **Internal Support**
-- **Primary Contact**: Data Team - Informatics Department
-- **Use Case**: Employee Recognition App project
-- **Organization**: Healthcare Organization
+### **Author & Organization**
+- **Author**: Kyle J. Coder
+- **Organization**: Advanced Analytics & Informatics, Edward Hines Jr. VA Hospital (v12/578), Veterans Health Administration, Department of Veterans Affairs
+- **Professional Email**: HinClinicalAnalytics@va.gov
+- **GitHub Repository**: https://github.com/KCoderVA/Base64_ImageConverter
+
+### **License Information**
+- **License**: GNU Affero General Public License v3.0 (AGPL v3)
+- **License File**: See LICENSE file in project root
+- **Key Requirement**: Source code must be provided for network services
 
 ### **External Support**
 - **Documentation**: README.md and inline code comments
