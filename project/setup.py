@@ -25,7 +25,7 @@ def read_requirements():
 
 setup(
     name="base64-image-converter",
-    version="1.0.0",
+    version="1.2.1",
     author="Kyle J. Coder",
     author_email="HinClinicalAnalytics@va.gov",
     description="Bidirectional converter for images and base64-encoded HTML format",

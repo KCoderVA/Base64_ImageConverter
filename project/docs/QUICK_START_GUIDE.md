@@ -8,14 +8,14 @@
 3. Click **"Download ZIP"**
 4. Extract the ZIP file to any folder on your computer
 
-### **Step 2: Automatic Setup** ⚙️
+### **Step 2: One-Time Setup** ⚙️
 1. Navigate to the extracted folder
-2. **Double-click** `quick_setup.py`
-3. Wait for it to finish (it installs everything automatically)
-4. Press Enter when it says "Press Enter to exit"
+2. **Double-click** `setup.py`
+3. This checks your Python installation and provides guidance
+4. Follow any on-screen instructions
 
 ### **Step 3: Start the Program** 🌐
-1. **Double-click** `start_gui.py`
+1. **Double-click** `LAUNCH_GUI.py`
 2. Your web browser will open automatically
 3. You'll see the Base64 Image Converter interface
 
@@ -62,11 +62,11 @@
 
 ### **Setup Issues:**
 - Make sure you have Python installed on your computer
-- Try running `quick_setup.py` again
+- Try running `setup.py` again
 - Restart your computer and try again
 
 ### **GUI Won't Start:**
-- Try double-clicking `start_gui.py` again
+- Try double-clicking `LAUNCH_GUI.py` again
 - Check if your antivirus is blocking the program
 - Manually open your browser to `http://localhost:8080`
 

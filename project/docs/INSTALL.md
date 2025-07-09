@@ -1,32 +1,37 @@
 # Installation Guide
 
-## Quick Installation
+## Quick Installation (End Users)
 
-### Method 1: Install from Wheel (Recommended)
-1. Download the latest `.whl` file from the releases
-2. Install using pip:
-   ```bash
-   pip install base64_image_converter-1.0.0-py3-none-any.whl
-   ```
+### Method 1: Simple Download & Run (Recommended for End Users)
+1. Download the repository as a ZIP file from GitHub
+2. Extract to your desired location
+3. Double-click `setup.py` to verify your Python installation
+4. Double-click `LAUNCH_GUI.py` to start the application
 
-### Method 2: Install from Source
+**That's it!** No additional installation required.
+
+### Method 2: Install as Python Package (For Developers)
 1. Download and extract the source code
-2. Navigate to the project directory
+2. Navigate to the `project/` directory
 3. Install using pip:
    ```bash
    pip install .
    ```
 
-### Method 3: Development Installation
+### Method 3: Development Installation (For Contributors)
 For developers who want to modify the code:
 ```bash
+cd project/
 pip install -e .
 ```
 
 ## Verify Installation
 
-After installation, verify that the commands are available:
+### For End Users:
+- Double-click `LAUNCH_GUI.py` - the web interface should open in your browser
 
+### For Package Installation:
+After installation, verify that the commands are available:
 ```bash
 # Test CLI interface
 base64-converter --help
@@ -34,7 +39,7 @@ base64-converter --help
 # Test GUI launcher
 base64-converter-gui
 
-# Test web interface
+# Test web interface  
 base64-converter-web
 ```
 

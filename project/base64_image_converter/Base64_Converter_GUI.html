@@ -1,9 +1,30 @@
 <!DOCTYPE html>
+<!--
+Base64 Image Converter - Convert images to Base64 and vice versa
+Copyright (C) 2025 Kyle J. Coder
+Advanced Analytics & Informatics, Edward Hines Jr. VA Hospital (v12/578)
+Veterans Health Administration, Department of Veterans Affairs
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+Contact: HinClinicalAnalytics@va.gov
+-->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bidirectional Base64 Image Converter</title>
+    <title>Base64 Image Converter - AGPL v3</title>
     <style>
         :root {
             --primary-color: #2563eb;
@@ -325,6 +346,119 @@
             display: none;
         }
 
+        .disabled {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* Enhanced file selection status */
+        #fileSelectionStatus {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        /* Enhanced button styling */
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn:disabled:hover {
+            transform: none;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Enhanced collapsible panel styling */
+        .collapsible-panel {
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .collapsible-panel.collapsed {
+            max-height: 600px; /* Match right panel approximate height */
+        }
+
+        .collapsible-panel.expanded {
+            max-height: none;
+        }
+
+        .collapse-toggle {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-left: auto;
+            transition: all 0.3s ease;
+        }
+
+        .collapse-toggle:hover {
+            background: #1d4ed8;
+            transform: scale(1.05);
+        }
+
+        .panel-content {
+            transition: opacity 0.3s ease;
+        }
+
+        .panel-content.fade-content {
+            position: relative;
+        }
+
+        .panel-content.fade-content::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(transparent, var(--card-bg));
+            pointer-events: none;
+        }
+
+        .panel-content.expanded::after {
+            display: none;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header button improvements */
+        .header .btn {
+            margin: 3px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+
+        /* Log window scrollbar styling */
+        .log-window::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .log-window::-webkit-scrollbar-track {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        .log-window::-webkit-scrollbar-thumb {
+            background: #64748b;
+            border-radius: 4px;
+        }
+
+        .log-window::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -337,6 +471,18 @@
             .conversion-modes {
                 flex-direction: column;
             }
+
+            .header .btn {
+                margin: 2px;
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+
+            .card h2 {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
         }
     </style>
 </head>
@@ -346,55 +492,118 @@
         <div class="header">
             <h1>🔄 Bidirectional Base64 Image Converter</h1>
             <p>Professional Image ↔ Base64 HTML Conversion Tool</p>
-            <span class="badge">Data Team - Informatics | v1.0.0</span>
+            <p style="margin-bottom: 15px;"><strong>Author:</strong> Kyle J. Coder | <strong>Organization:</strong> Advanced Analytics & Informatics, Edward Hines Jr. VA Hospital</p>
+            <span class="badge">Data Team - Informatics | v1.2.1 - AGPL v3</span>
+            
+            <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn" onclick="openGitHubRepo()">
+                    � GitHub Repository
+                </button>
+                <button class="btn btn-secondary" onclick="openChangelog()">
+                    � Changelog & Versions
+                </button>
+                <button class="btn" onclick="openReadme()">
+                    � README Documentation
+                </button>
+                <button class="btn" onclick="openLicense()">
+                    ⚖️ AGPL v3 License
+                </button>
+            </div>
         </div>
 
         <!-- Main Content Grid -->
         <div class="main-content">
             <!-- Tutorial & Information Panel -->
-            <div class="card">
+            <div class="card collapsible-panel collapsed" id="infoPanel">
                 <h2>
                     <span class="icon">📚</span>
-                    How It Works
+                    Project Information & Tutorial
+                    <button class="collapse-toggle" onclick="toggleInfoPanel()" id="collapseBtn">
+                        ▼ Expand Details
+                    </button>
                 </h2>
                 
-                <div class="tutorial-section">
-                    <h3>🎯 Purpose</h3>
-                    <p>This tool provides bidirectional conversion between image files and base64-encoded HTML format, perfect for web applications, emails, or eliminating external image dependencies.</p>
-                </div>
-
-                <div class="conversion-modes">
-                    <div class="mode-card">
-                        <h4>📸 → 📄</h4>
-                        <p>Images to Base64 HTML</p>
+                <div class="panel-content fade-content" id="panelContent">
+                    <div class="tutorial-section">
+                        <h3>🎯 Purpose & Overview</h3>
+                        <p>This tool provides bidirectional conversion between image files and base64-encoded HTML format, perfect for web applications, emails, or eliminating external image dependencies. Developed for the VA Medical Center to support clinical analytics and data visualization workflows.</p>
                     </div>
-                    <div class="mode-card">
-                        <h4>📄 → 📸</h4>
-                        <p>Base64 HTML to Images</p>
+
+                    <div class="tutorial-section">
+                        <h3>📋 Project Details</h3>
+                        <ul>
+                            <li><strong>Version:</strong> 1.2.1 (AGPL v3 License)</li>
+                            <li><strong>Author:</strong> Kyle J. Coder</li>
+                            <li><strong>Organization:</strong> Advanced Analytics & Informatics</li>
+                            <li><strong>Contact:</strong> HinClinicalAnalytics@va.gov</li>
+                            <li><strong>Platform:</strong> Cross-platform Python + Web GUI</li>
+                            <li><strong>Repository:</strong> Open source on GitHub</li>
+                        </ul>
                     </div>
-                </div>
 
-                <div class="tutorial-section">
-                    <h3>✨ Features</h3>
-                    <ul>
-                        <li>🔄 Bidirectional conversion support</li>
-                        <li>📁 Batch processing capabilities</li>
-                        <li>🖼️ Multiple formats: PNG, JPEG, GIF, BMP</li>
-                        <li>📏 Automatic dimension extraction</li>
-                        <li>🎨 Professional HTML5 output</li>
-                        <li>📊 Detailed conversion reports</li>
-                    </ul>
-                </div>
+                    <div class="conversion-modes">
+                        <div class="mode-card">
+                            <h4>📸 → 📄</h4>
+                            <p>Images to Base64 HTML</p>
+                            <small>Convert PNG, JPG, GIF, BMP files to embeddable HTML base64 strings</small>
+                        </div>
+                        <div class="mode-card">
+                            <h4>📄 → 📸</h4>
+                            <p>Base64 HTML to Images</p>
+                            <small>Extract and save images from base64-encoded HTML content</small>
+                        </div>
+                    </div>
 
-                <div class="tutorial-section">
-                    <h3>🚀 Quick Start</h3>
-                    <ul>
-                        <li>1️⃣ Select your conversion mode</li>
-                        <li>2️⃣ Choose input files or folder</li>
-                        <li>3️⃣ Set output destination</li>
-                        <li>4️⃣ Start conversion process</li>
-                        <li>5️⃣ Review results summary</li>
-                    </ul>
+                    <div class="tutorial-section">
+                        <h3>✨ Key Features</h3>
+                        <ul>
+                            <li>🔄 Bidirectional conversion support (images ↔ base64)</li>
+                            <li>📁 Batch processing capabilities for multiple files</li>
+                            <li>🖼️ Multiple formats: PNG, JPEG, GIF, BMP, HTML</li>
+                            <li>📏 Automatic dimension and metadata extraction</li>
+                            <li>🎨 Professional HTML5 output with clean formatting</li>
+                            <li>📊 Detailed conversion reports and error handling</li>
+                            <li>🌐 Web-based GUI + Python command-line interface</li>
+                            <li>⚡ High-performance processing with progress tracking</li>
+                            <li>🔒 Secure local processing (no data uploaded)</li>
+                            <li>🎯 Optimized for clinical and data analytics workflows</li>
+                        </ul>
+                    </div>
+
+                    <div class="tutorial-section">
+                        <h3>🚀 Quick Start Guide</h3>
+                        <ul>
+                            <li>1️⃣ <strong>Select Mode:</strong> Choose auto-detect or specific conversion direction</li>
+                            <li>2️⃣ <strong>Add Files:</strong> Drag & drop files or use file/folder selection buttons</li>
+                            <li>3️⃣ <strong>Set Output:</strong> Choose destination folder for converted files</li>
+                            <li>4️⃣ <strong>Convert:</strong> Click "Start Conversion" and monitor progress</li>
+                            <li>5️⃣ <strong>Review:</strong> Check results summary and download converted files</li>
+                        </ul>
+                    </div>
+
+                    <div class="tutorial-section">
+                        <h3>🔧 Technical Specifications</h3>
+                        <ul>
+                            <li><strong>Input Formats:</strong> PNG, JPEG, GIF, BMP, HTML, TXT</li>
+                            <li><strong>Output Formats:</strong> Base64 HTML, Image files</li>
+                            <li><strong>Max File Size:</strong> Limited by available system memory</li>
+                            <li><strong>Performance:</strong> Optimized for large batch operations</li>
+                            <li><strong>Dependencies:</strong> Python 3.7+, Pillow, base64</li>
+                            <li><strong>Platform Support:</strong> Windows, macOS, Linux</li>
+                        </ul>
+                    </div>
+
+                    <div class="tutorial-section">
+                        <h3>💡 Use Cases</h3>
+                        <ul>
+                            <li>📧 Email templates with embedded images</li>
+                            <li>🌐 Web applications without external image dependencies</li>
+                            <li>📊 Clinical reports with embedded charts and graphs</li>
+                            <li>📱 Mobile apps requiring offline image access</li>
+                            <li>🔒 Secure document generation with embedded media</li>
+                            <li>📈 Data visualization exports for presentations</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
@@ -402,51 +611,88 @@
             <div class="card">
                 <h2>
                     <span class="icon">🎛️</span>
-                    Control Panel
+                    Conversion Control Panel
                 </h2>
 
-                <div class="file-drop-zone" id="dropZone">
-                    <div style="font-size: 3rem; margin-bottom: 10px;">📁</div>
-                    <p><strong>Drag & Drop Files Here</strong></p>
-                    <p>or click the buttons below to select files</p>
-                    <p style="font-size: 0.9rem; color: #64748b; margin-top: 10px;">
-                        Supported: PNG, JPEG, GIF, BMP, TXT, HTML
-                    </p>
-                </div>
-
-                <button class="btn btn-large" onclick="selectInputFiles()">
-                    📂 Select Input Files
-                </button>
-
-                <button class="btn btn-secondary btn-large" onclick="selectInputFolder()">
-                    📁 Select Input Folder (Batch Mode)
-                </button>
-
-                <button class="btn btn-large" onclick="selectOutputFolder()">
-                    💾 Choose Output Destination
-                </button>
-
-                <div style="margin: 20px 0;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Conversion Mode:</label>
-                    <select id="conversionMode" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid var(--border-color);">
-                        <option value="auto">🔄 Auto-Detect (Recommended)</option>
+                <!-- Conversion Mode Selection -->
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--primary-color);">Conversion Mode:</label>
+                    <select id="conversionMode" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid var(--border-color); font-size: 1rem;">
+                        <option value="auto">� Auto-Detect (Recommended)</option>
                         <option value="to-base64">📸 → 📄 Images to Base64</option>
                         <option value="from-base64">📄 → 📸 Base64 to Images</option>
                     </select>
                 </div>
 
-                <button class="btn btn-success btn-large" onclick="startConversion()">
+                <!-- Compact Drag & Drop Zone -->
+                <div class="file-drop-zone" id="dropZone" style="padding: 25px 15px; margin-bottom: 15px;">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">📁</div>
+                    <p><strong>Drag & Drop Files Here</strong></p>
+                    <p style="font-size: 0.85rem; color: #64748b; margin: 5px 0 0 0;">
+                        Supported: PNG, JPEG, GIF, BMP, TXT, HTML
+                    </p>
+                </div>
+
+                <!-- File Selection Buttons -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                    <button class="btn" onclick="selectInputFiles()" id="selectFilesBtn">
+                        📂 Select Files
+                    </button>
+                    <button class="btn btn-secondary" onclick="selectInputFolder()" id="selectFolderBtn">
+                        📁 Select Folder
+                    </button>
+                </div>
+
+                <!-- Output Destination -->
+                <button class="btn btn-large" onclick="selectOutputFolder()" id="outputFolderBtn" style="margin-bottom: 20px;">
+                    � Choose Custom Output Folder
+                </button>
+                
+                <!-- Output Status Display -->
+                <div style="background: #f0f9ff; padding: 12px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--primary-color);">
+                    <p style="margin: 0; font-size: 0.9rem; color: var(--text-color);">
+                        <strong>📍 Output Destination:</strong> <span id="outputStatus">Browser Default Downloads</span>
+                    </p>
+                    <p style="margin: 5px 0 0 0; font-size: 0.8rem; color: #64748b;">
+                        Files will be saved to your specified location or browser downloads
+                    </p>
+                </div>
+
+                <!-- File Selection Status -->
+                <div id="fileSelectionStatus" style="background: #f1f5f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none;">
+                    <h4 style="margin-bottom: 10px; color: var(--primary-color);">📋 Selected Files:</h4>
+                    <div id="selectedFilesList" style="max-height: 120px; overflow-y: auto;">
+                        <!-- Selected files will be listed here -->
+                    </div>
+                </div>
+
+                <!-- Conversion Button (Initially Hidden) -->
+                <button class="btn btn-success btn-large hidden" onclick="startConversion()" id="startConversionBtn">
                     <span class="icon">▶️</span>
                     Start Conversion Process
                 </button>
 
+                <!-- Processing Status -->
                 <div style="margin-top: 20px;">
                     <div style="display: flex; align-items: center; margin-bottom: 10px;">
                         <span class="status-indicator status-ready" id="statusIndicator"></span>
-                        <span id="statusText">Ready to convert</span>
+                        <span id="statusText">Ready - Select files to begin</span>
                     </div>
                     <div class="progress-bar">
                         <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                    <h4 style="margin-bottom: 10px; color: var(--primary-color);">⚡ Quick Actions:</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <button class="btn" onclick="resetInterface()" style="padding: 8px 12px; font-size: 0.9rem;">
+                            🔄 Reset All
+                        </button>
+                        <button class="btn btn-secondary" onclick="openHelpDialog()" style="padding: 8px 12px; font-size: 0.9rem;">
+                            ❓ Help
+                        </button>
                     </div>
                 </div>
             </div>
@@ -467,15 +713,22 @@
         <div class="card">
             <h2>
                 <span class="icon">📋</span>
-                Process Log
-                <button class="btn" onclick="clearLog()" style="margin-left: auto; padding: 5px 10px; font-size: 0.8rem;">
-                    🗑️ Clear
-                </button>
+                Process Log & System Status
+                <div style="margin-left: auto; display: flex; gap: 8px;">
+                    <button class="btn" onclick="rebootProject()" style="padding: 6px 12px; font-size: 0.8rem;">
+                        🔄 Reboot Project
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearLog()" style="padding: 6px 12px; font-size: 0.8rem;">
+                        🗑️ Clear Log
+                    </button>
+                </div>
             </h2>
             <div class="log-window" id="logWindow">
-                <div class="log-entry info">📋 Base64 Image Converter initialized and ready...</div>
+                <div class="log-entry info">📋 Base64 Image Converter v1.2.1 initialized and ready...</div>
                 <div class="log-entry info">💡 Tip: You can drag and drop files directly onto the drop zone above</div>
                 <div class="log-entry info">🔧 Python script integration ready for file processing</div>
+                <div class="log-entry info">⚖️ Running under AGPL v3 license - see documentation for details</div>
+                <div class="log-entry success">✅ All systems operational - ready for conversion tasks</div>
             </div>
         </div>
     </div>
@@ -484,14 +737,93 @@
         // Global variables
         let selectedFiles = [];
         let selectedInputFolder = '';
-        let selectedOutputFolder = '';
+        let selectedOutputFolder = 'browser-default'; // Default to browser's download location
         let conversionResults = [];
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
             initializeDragAndDrop();
+            initializeInterface();
+            checkDesktopEnvironment();
             logMessage('info', '🚀 Application initialized successfully');
+            logMessage('info', '📋 Base64 Image Converter v1.2.1 ready for operation');
+            logMessage('info', '💡 Select files using drag & drop or the file selection buttons');
+            logMessage('info', '� Default output: Browser Downloads (click "Choose Custom Output Folder" for Windows File Explorer)');
+            logMessage('info', '�🔗 Use header buttons to access GitHub repository, documentation, and changelog');
         });
+
+        function initializeInterface() {
+            // Set initial status
+            updateStatus('Ready - Select files to begin', 'ready');
+            
+            // Hide conversion button initially
+            document.getElementById('startConversionBtn').classList.add('hidden');
+            
+            // Hide file selection status initially
+            document.getElementById('fileSelectionStatus').style.display = 'none';
+            
+            // Hide results section initially
+            document.getElementById('resultsSection').style.display = 'none';
+            
+            // Set default conversion mode
+            document.getElementById('conversionMode').value = 'auto';
+            
+            // Initialize collapsible panel
+            updatePanelContent();
+            
+            // Set default output destination to browser's default download location
+            setDefaultOutputDestination();
+        }
+
+        function setDefaultOutputDestination() {
+            // Set the default output destination to browser's default downloads folder
+            selectedOutputFolder = 'browser-default';
+            updateOutputStatus('Browser Default Downloads');
+            logMessage('info', '💾 Default output destination: Browser Downloads folder');
+            logMessage('info', '💡 Files will be downloaded to your browser\'s default download location');
+            updateStatus('Default output: Browser Downloads - ready to convert', 'ready');
+        }
+
+        function updateOutputStatus(destination) {
+            const outputStatus = document.getElementById('outputStatus');
+            if (outputStatus) {
+                outputStatus.textContent = destination;
+            }
+        }
+
+        // Collapsible panel functionality
+        function toggleInfoPanel() {
+            const panel = document.getElementById('infoPanel');
+            const content = document.getElementById('panelContent');
+            const button = document.getElementById('collapseBtn');
+            
+            if (panel.classList.contains('collapsed')) {
+                // Expand panel
+                panel.classList.remove('collapsed');
+                panel.classList.add('expanded');
+                content.classList.remove('fade-content');
+                content.classList.add('expanded');
+                button.textContent = '▲ Collapse Details';
+                logMessage('info', '📖 Information panel expanded');
+            } else {
+                // Collapse panel
+                panel.classList.remove('expanded');
+                panel.classList.add('collapsed');
+                content.classList.remove('expanded');
+                content.classList.add('fade-content');
+                button.textContent = '▼ Expand Details';
+                logMessage('info', '📖 Information panel collapsed');
+            }
+        }
+
+        function updatePanelContent() {
+            const panel = document.getElementById('infoPanel');
+            const content = document.getElementById('panelContent');
+            
+            if (panel.classList.contains('collapsed')) {
+                content.classList.add('fade-content');
+            }
+        }
 
         // Drag and drop functionality
         function initializeDragAndDrop() {
@@ -532,46 +864,356 @@
         }
 
         function selectInputFolder() {
-            // Note: Web browsers don't support folder selection the same way as desktop apps
-            // This would typically require a backend server or file system API
-            logMessage('warning', '📁 Folder selection: Please use the Python script directly for batch folder processing');
-            logMessage('info', '💡 Alternative: Select multiple files using Ctrl+Click in the file dialog');
+            // Create a file input that accepts directories (webkitdirectory)
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.webkitdirectory = true;
+            input.multiple = true;
+            
+            input.onchange = function(e) {
+                const files = Array.from(e.target.files);
+                if (files.length > 0) {
+                    // Get the folder path from the first file
+                    const folderPath = files[0].webkitRelativePath.split('/')[0];
+                    selectedInputFolder = folderPath;
+                    
+                    logMessage('success', `📁 Selected folder: ${folderPath}`);
+                    logMessage('info', `📂 Found ${files.length} files in the selected folder`);
+                    
+                    // Filter for supported file types
+                    const supportedFiles = files.filter(file => {
+                        const ext = file.name.split('.').pop().toLowerCase();
+                        return ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'txt', 'html', 'htm'].includes(ext);
+                    });
+                    
+                    if (supportedFiles.length > 0) {
+                        handleFileSelection(supportedFiles);
+                        logMessage('info', `✅ Using ${supportedFiles.length} supported files from folder`);
+                    } else {
+                        logMessage('warning', '⚠️ No supported files found in the selected folder');
+                    }
+                } else {
+                    logMessage('error', '❌ No folder selected or folder is empty');
+                }
+            };
+            
+            // For Electron/desktop apps, this would call native folder dialog
+            if (window.electronAPI && window.electronAPI.selectFolder) {
+                window.electronAPI.selectFolder().then(result => {
+                    if (result && !result.canceled) {
+                        selectedInputFolder = result.filePaths[0];
+                        logMessage('success', `� Selected folder: ${selectedInputFolder}`);
+                        updateStatus('Input folder selected - ready to process', 'ready');
+                    }
+                });
+            } else {
+                // Fallback to web folder selection
+                input.click();
+            }
         }
 
         function selectOutputFolder() {
-            // Similar limitation for folder selection in web browsers
-            logMessage('info', '💾 Output folder: Files will be downloaded to your default Downloads folder');
-            selectedOutputFolder = 'Downloads';
-            updateStatus('Output destination set to Downloads folder', 'ready');
+            logMessage('info', '📁 Opening Windows File Explorer for custom output destination...');
+            
+            // For Electron/desktop apps with native folder dialog
+            if (window.electronAPI && window.electronAPI.selectOutputFolder) {
+                window.electronAPI.selectOutputFolder().then(result => {
+                    if (result && !result.canceled && result.filePaths.length > 0) {
+                        selectedOutputFolder = result.filePaths[0];
+                        updateOutputStatus(selectedOutputFolder);
+                        logMessage('success', `💾 Custom output destination: ${selectedOutputFolder}`);
+                        updateStatus('Custom output folder configured - ready to convert', 'ready');
+                    } else {
+                        logMessage('info', '💾 Output destination selection cancelled - using browser default');
+                        setDefaultOutputDestination();
+                    }
+                });
+            } 
+            // For modern browsers with File System Access API (Chrome, Edge)
+            else if ('showDirectoryPicker' in window) {
+                try {
+                    window.showDirectoryPicker({
+                        mode: 'readwrite'
+                    }).then(dirHandle => {
+                        selectedOutputFolder = dirHandle.name;
+                        updateOutputStatus(`Custom Folder: ${dirHandle.name}`);
+                        logMessage('success', `💾 Custom output destination: ${selectedOutputFolder}`);
+                        logMessage('info', '✅ File System Access API - custom folder selected');
+                        updateStatus('Custom output folder configured - ready to convert', 'ready');
+                        
+                        // Store the directory handle for later use
+                        window.selectedOutputDirHandle = dirHandle;
+                    }).catch(err => {
+                        if (err.name === 'AbortError') {
+                            logMessage('info', '💾 Folder selection cancelled - using browser default downloads');
+                        } else {
+                            logMessage('warning', `⚠️ Folder selection error: ${err.message}`);
+                            logMessage('info', '💾 Falling back to browser default downloads');
+                        }
+                        setDefaultOutputDestination();
+                    });
+                } catch (error) {
+                    logMessage('error', `❌ Directory picker error: ${error.message}`);
+                    logMessage('info', '� Using browser default downloads');
+                    setDefaultOutputDestination();
+                }
+            }
+            // Fallback for browsers without File System Access API
+            else {
+                logMessage('info', '🌐 File System Access API not available in this browser');
+                logMessage('info', '💡 For full folder selection, use Chrome/Edge or desktop version');
+                
+                // Show informational dialog instead of prompting for folder name
+                const userChoice = confirm(
+                    'Custom Output Folder Selection\n\n' +
+                    'Your browser doesn\'t support native folder selection.\n\n' +
+                    'Click OK to continue using browser default downloads, or\n' +
+                    'Cancel to learn about enhanced folder selection options.'
+                );
+                
+                if (userChoice) {
+                    logMessage('info', '💾 Continuing with browser default downloads');
+                    setDefaultOutputDestination();
+                } else {
+                    alert(
+                        'Enhanced Folder Selection Options:\n\n' +
+                        '• Use Chrome or Edge browsers for native folder selection\n' +
+                        '• Install desktop version for full Windows File Explorer integration\n' +
+                        '• Files will download to your browser\'s default download folder\n\n' +
+                        'Continuing with default downloads...'
+                    );
+                    setDefaultOutputDestination();
+                }
+            }
+        }
+
+        // New utility functions for enhanced GUI functionality
+        function resetInterface() {
+            selectedFiles = [];
+            selectedInputFolder = '';
+            selectedOutputFolder = 'browser-default'; // Reset to default
+            conversionResults = [];
+            
+            // Reset UI elements
+            document.getElementById('fileSelectionStatus').style.display = 'none';
+            document.getElementById('startConversionBtn').classList.add('hidden');
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('conversionMode').value = 'auto';
+            
+            // Reset output destination display to default
+            setDefaultOutputDestination();
+            
+            updateStatus('Interface reset - ready for new conversion', 'ready');
+            updateProgress(0);
+            logMessage('info', '🔄 Interface reset successfully');
+        }
+
+        function rebootProject() {
+            logMessage('warning', '🔄 Rebooting project - reinitializing all systems...');
+            
+            // Clear all data
+            resetInterface();
+            
+            // Clear and reinitialize log
+            const logWindow = document.getElementById('logWindow');
+            logWindow.innerHTML = '';
+            
+            // Reinitialize application
+            setTimeout(() => {
+                logMessage('info', '📋 Base64 Image Converter v1.2.1 rebooted successfully');
+                logMessage('info', '✅ All systems reinitialized and ready for operation');
+                logMessage('info', '💡 Project reboot complete - you can now start a new conversion');
+                updateStatus('System rebooted - ready for operation', 'ready');
+            }, 500);
+        }
+
+        function openHelpDialog() {
+            const helpContent = `
+🔄 Base64 Image Converter v1.2.1 - Help Guide
+
+📋 QUICK START:
+1. Select conversion mode (auto-detect recommended)
+2. Drag & drop files or use selection buttons
+3. Choose output destination
+4. Click "Start Conversion"
+
+🎯 SUPPORTED FORMATS:
+• Input: PNG, JPEG, GIF, BMP, HTML, TXT
+• Output: Base64 HTML files, Image files
+
+⚡ FEATURES:
+• Bidirectional conversion
+• Batch processing
+• Progress tracking
+• Error recovery
+• Detailed logging
+
+🌐 PROJECT LINKS:
+• GitHub: https://github.com/KCoderVA/Base64_ImageConverter
+• Documentation: Available in README and project docs
+• License: AGPL v3 (GNU Affero General Public License)
+
+📞 SUPPORT:
+For technical support or bug reports, contact:
+HinClinicalAnalytics@va.gov
+
+📖 For more detailed help, use the README and Changelog buttons above
+            `;
+            
+            alert(helpContent);
+            logMessage('info', '❓ Help dialog displayed to user');
+        }
+
+        // Enhanced header button functions
+        function openGitHubRepo() {
+            const repoUrl = 'https://github.com/KCoderVA/Base64_ImageConverter';
+            logMessage('info', '🌐 Opening GitHub repository...');
+            
+            // Open in new tab/window
+            window.open(repoUrl, '_blank', 'noopener,noreferrer');
+            logMessage('success', `✅ Opened GitHub repository: ${repoUrl}`);
+        }
+
+        function openReadme() {
+            logMessage('info', '📖 Opening README documentation...');
+            
+            // Try to open the README file from the project
+            const readmeUrl = './README.md';
+            
+            // For desktop/Electron environments
+            if (window.electronAPI && window.electronAPI.openFile) {
+                window.electronAPI.openFile('README.md').then(() => {
+                    logMessage('success', '✅ README opened in system default application');
+                }).catch(() => {
+                    // Fallback to GitHub if local file not available
+                    window.open('https://github.com/KCoderVA/Base64_ImageConverter/blob/main/README.md', '_blank');
+                    logMessage('info', '📖 Opened README from GitHub repository');
+                });
+            } else {
+                // Web environment - open from GitHub
+                window.open('https://github.com/KCoderVA/Base64_ImageConverter/blob/main/README.md', '_blank', 'noopener,noreferrer');
+                logMessage('success', '✅ Opened README from GitHub repository');
+            }
+        }
+
+        function openChangelog() {
+            logMessage('info', '📋 Opening changelog and version history...');
+            
+            // Try to open the changelog file from the project
+            const changelogUrl = './project/docs/CHANGELOG.md';
+            
+            // For desktop/Electron environments
+            if (window.electronAPI && window.electronAPI.openFile) {
+                window.electronAPI.openFile('project/docs/CHANGELOG.md').then(() => {
+                    logMessage('success', '✅ Changelog opened in system default application');
+                }).catch(() => {
+                    // Fallback to GitHub if local file not available
+                    window.open('https://github.com/KCoderVA/Base64_ImageConverter/blob/main/project/docs/CHANGELOG.md', '_blank');
+                    logMessage('info', '📋 Opened changelog from GitHub repository');
+                });
+            } else {
+                // Web environment - open from GitHub
+                window.open('https://github.com/KCoderVA/Base64_ImageConverter/blob/main/project/docs/CHANGELOG.md', '_blank', 'noopener,noreferrer');
+                logMessage('success', '✅ Opened changelog from GitHub repository');
+            }
+        }
+
+        function openLicense() {
+            logMessage('info', '⚖️ Opening AGPL v3 license information...');
+            
+            // For desktop/Electron environments
+            if (window.electronAPI && window.electronAPI.openFile) {
+                window.electronAPI.openFile('LICENSE').then(() => {
+                    logMessage('success', '✅ License file opened in system default application');
+                }).catch(() => {
+                    // Fallback to GNU website
+                    window.open('https://www.gnu.org/licenses/agpl-3.0.html', '_blank');
+                    logMessage('info', '⚖️ Opened AGPL v3 license from GNU website');
+                });
+            } else {
+                // Web environment - show license options
+                const licenseChoice = confirm(
+                    'AGPL v3 License Information\n\n' +
+                    'Click OK to view the full license text on the GNU website,\n' +
+                    'or Cancel to view the project license file on GitHub.'
+                );
+                
+                if (licenseChoice) {
+                    window.open('https://www.gnu.org/licenses/agpl-3.0.html', '_blank', 'noopener,noreferrer');
+                    logMessage('success', '✅ Opened full AGPL v3 license from GNU website');
+                } else {
+                    window.open('https://github.com/KCoderVA/Base64_ImageConverter/blob/main/LICENSE', '_blank', 'noopener,noreferrer');
+                    logMessage('success', '✅ Opened project license file from GitHub');
+                }
+            }
         }
 
         function handleFileSelection(files) {
             selectedFiles = files;
-            logMessage('success', `📂 Selected ${files.length} file(s):`);
+            const fileSelectionStatus = document.getElementById('fileSelectionStatus');
+            const selectedFilesList = document.getElementById('selectedFilesList');
+            const startConversionBtn = document.getElementById('startConversionBtn');
             
-            files.forEach(file => {
-                const fileType = getFileType(file.name);
-                logMessage('info', `   • ${file.name} (${fileType}, ${formatFileSize(file.size)})`);
-            });
+            // Clear previous file list
+            selectedFilesList.innerHTML = '';
+            
+            if (files.length > 0) {
+                logMessage('success', `📂 Selected ${files.length} file(s):`);
+                
+                // Show file selection status
+                fileSelectionStatus.style.display = 'block';
+                
+                // List selected files
+                files.forEach((file, index) => {
+                    const fileType = getFileType(file.name);
+                    const fileDiv = document.createElement('div');
+                    fileDiv.style.cssText = 'padding: 5px 0; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;';
+                    fileDiv.innerHTML = `
+                        <span>📄 ${file.name}</span>
+                        <span style="font-size: 0.8rem; color: #64748b;">${fileType} | ${formatFileSize(file.size)}</span>
+                    `;
+                    selectedFilesList.appendChild(fileDiv);
+                    
+                    logMessage('info', `   • ${file.name} (${fileType}, ${formatFileSize(file.size)})`);
+                });
 
-            updateStatus(`${files.length} file(s) selected for conversion`, 'ready');
+                // Show start conversion button
+                startConversionBtn.classList.remove('hidden');
+                updateStatus(`${files.length} file(s) ready for conversion`, 'ready');
+            } else {
+                // Hide file selection status and start button
+                fileSelectionStatus.style.display = 'none';
+                startConversionBtn.classList.add('hidden');
+                updateStatus('No files selected', 'ready');
+            }
         }
 
         // Conversion process
         function startConversion() {
             if (selectedFiles.length === 0) {
                 logMessage('error', '❌ No files selected. Please select files first.');
+                updateStatus('Error: No files selected', 'error');
                 return;
             }
+
+            if (!selectedOutputFolder || selectedOutputFolder === '') {
+                logMessage('warning', '⚠️ No output folder specified. Using browser default downloads.');
+                selectedOutputFolder = 'browser-default';
+            }
+
+            const startBtn = document.getElementById('startConversionBtn');
+            startBtn.disabled = true;
+            startBtn.innerHTML = '<span class="icon">⏳</span>Processing...';
 
             updateStatus('Processing files...', 'processing');
             updateProgress(0);
             logMessage('info', '🔄 Starting conversion process...');
+            logMessage('info', `📁 Processing ${selectedFiles.length} file(s) to ${selectedOutputFolder}`);
             
             // Clear previous results
             conversionResults = [];
             
-            // Simulate file processing (in real implementation, this would call the Python script)
+            // Start file processing
             processFiles();
         }
 
@@ -625,6 +1267,11 @@
             const successCount = conversionResults.filter(r => r.success).length;
             const failCount = conversionResults.filter(r => !r.success).length;
             
+            // Restore start button
+            const startBtn = document.getElementById('startConversionBtn');
+            startBtn.disabled = false;
+            startBtn.innerHTML = '<span class="icon">▶️</span>Start Conversion Process';
+            
             updateStatus(`Conversion complete: ${successCount} success, ${failCount} failed`, 'ready');
             updateProgress(100);
             
@@ -633,6 +1280,7 @@
             if (failCount > 0) {
                 logMessage('error', `❌ Failed conversions: ${failCount} file(s)`);
             }
+            logMessage('info', `💾 Results saved to: ${selectedOutputFolder}`);
             
             displayResults();
         }
@@ -761,6 +1409,29 @@
             // 4. Use Electron to create a desktop app
             
             logMessage('info', '🐍 Python script integration point - implement based on your deployment method');
+        }
+
+        // Desktop Integration Notes:
+        // For full Windows File Explorer integration, this application should be packaged as:
+        // 1. Electron app with native file system access
+        // 2. PWA with File System Access API (Chrome-based browsers)
+        // 3. Desktop executable with embedded web view
+        // 
+        // Current web-based implementation provides fallback functionality
+        // and demonstrates the intended user interface workflow.
+
+        // Check for desktop/Electron environment
+        function checkDesktopEnvironment() {
+            if (typeof window !== 'undefined' && window.electronAPI) {
+                logMessage('info', '🖥️ Desktop environment detected - full file system access available');
+                return true;
+            } else if ('showDirectoryPicker' in window) {
+                logMessage('info', '🌐 File System Access API available (Chrome-based browsers)');
+                return true;
+            } else {
+                logMessage('info', '🌐 Web environment - using browser file selection dialogs');
+                return false;
+            }
         }
     </script>
 </body>

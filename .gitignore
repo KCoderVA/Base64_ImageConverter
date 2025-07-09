@@ -1,3 +1,9 @@
+# Base64 Image Converter - Git Ignore File
+# Copyright (C) 2025 Kyle J. Coder
+# Advanced Analytics & Informatics, Edward Hines Jr. VA Hospital (v12/578)
+# Veterans Health Administration, Department of Veterans Affairs
+# Licensed under AGPL v3.0
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

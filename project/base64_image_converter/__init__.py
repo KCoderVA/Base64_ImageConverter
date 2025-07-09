@@ -1,6 +1,24 @@
 #!/usr/bin/env python3
 """
 Base64 Image Converter Package
+Copyright (C) 2025 Kyle J. Coder
+Advanced Analytics & Informatics, Edward Hines Jr. VA Hospital (v12/578)
+Veterans Health Administration, Department of Veterans Affairs
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+Contact: HinClinicalAnalytics@va.gov
 
 A comprehensive tool for bidirectional conversion between image files and 
 base64-encoded HTML format. Perfect for web applications, emails, or any 
@@ -19,9 +37,10 @@ Modules:
 - launch_gui: GUI launcher
 """
 
-__version__ = "1.0.0"
-__author__ = "Data Team - Informatics Developer"
-__email__ = "informatics@healthcareorg.com"
+__version__ = "1.0.1"
+__author__ = "Kyle J. Coder"
+__email__ = "HinClinicalAnalytics@va.gov"
+__license__ = "AGPL-3.0"
 __description__ = "Bidirectional converter for images and base64-encoded HTML format"
 
 # Import main functions for easy access

@@ -1,9 +1,20 @@
 # Contributing to Base64 Image Converter
 
-Thank you for your interest in contributing to the Bidirectional Base64 Image Converter! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to the Base64 Image Converter! This project is developed and maintained by Kyle J. Coder at the Advanced Analytics & Informatics department of Edward Hines Jr. VA Hospital.
+
+## 📋 License Information
+
+This project is licensed under the **GNU Affero General Public License v3.0 (AGPL v3)**. By contributing to this project, you agree that your contributions will be licensed under the same license.
+
+**Key points about AGPL v3:**
+- All source code must remain open and free
+- Network services using this code must provide source access to users
+- Modifications must be clearly marked and dated
+- Commercial use is allowed but derivative works must also be AGPL v3
 
 ## 📋 Table of Contents
 
+- [License Information](#license-information)
 - [Code of Conduct](#code-of-conduct)
 - [Getting Started](#getting-started)
 - [Development Setup](#development-setup)
@@ -277,15 +288,20 @@ We're particularly interested in contributions in these areas:
 
 ### Getting Help
 
-- **File an issue** for bugs or feature requests
-- **Start a discussion** for questions about contributing
-- **Email the team**: Data Team - Informatics Department
+- **File an issue** on GitHub for bugs or feature requests
+- **Email**: HinClinicalAnalytics@va.gov for direct support
+- **Repository**: https://github.com/KCoderVA/Base64_ImageConverter
 
-### Maintainers
+### Maintainer Information
 
-- **Primary Maintainer**: Data Team - Informatics Developer
-- **Organization**: Healthcare Organization
-- **Department**: Data Team - Informatics
+- **Primary Maintainer**: Kyle J. Coder
+- **Organization**: Advanced Analytics & Informatics, Edward Hines Jr. VA Hospital (v12/578)
+- **Department**: Veterans Health Administration, Department of Veterans Affairs
+- **Professional Email**: HinClinicalAnalytics@va.gov
+
+### VA Contributors
+
+This project is developed within the Veterans Health Administration to support healthcare data analytics and informatics operations. Contributors from other VA facilities or federal agencies are welcome.
 
 ## 🙏 Recognition
 
