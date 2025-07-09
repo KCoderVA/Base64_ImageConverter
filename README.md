@@ -11,11 +11,14 @@ Perfect for embedding images directly into HTML emails, web pages, or documents 
 ## ✨ Features
 
 - **🔄 Bidirectional Conversion**: Images ↔ Base64 HTML format
-- **🌐 Modern Web Interface**: Beautiful drag-and-drop GUI
+- **🌐 Dual Interface Options**: Desktop Python GUI + Professional Web-based GUI
 - **📁 Batch Processing**: Convert multiple files at once
-- **📱 Cross-Platform**: Works on Windows, macOS, and Linux
+- **📱 Cross-Platform**: Works on Windows, macOS, Linux, mobile devices
 - **🎨 User-Friendly**: No technical knowledge required
-- **🔧 Format Support**: PNG, JPEG, GIF, BMP image formats
+- **🔧 Format Support**: PNG, JPEG, GIF, BMP, WebP image formats
+- **🚀 Zero-Installation Option**: Web version requires no setup
+- **🔒 Privacy Focused**: All processing happens locally
+- **📊 Professional Reports**: Comprehensive conversion documentation
 
 ## 🚀 Quick Start (3 Steps!)
 
@@ -32,6 +35,31 @@ Double-click on: **`setup.py`**
 Double-click on: **`LAUNCH_GUI.py`**
 
 *The web interface will open in your browser automatically.*
+
+## 🌐 Web-Based GUI (No Installation Required!)
+
+**NEW**: For users who prefer not to install Python or want instant access, we now offer a **professional web-based version**:
+
+**📍 Location**: `web-based_SimplifiedGUI/LAUNCH_SimplifiedGUI.html`
+
+### Features of Web Version:
+- **🚀 Zero Installation**: Double-click the HTML file - no Python needed!
+- **🎨 Professional Interface**: Full-featured GUI matching the desktop version
+- **📱 Universal Compatibility**: Works on any device with a modern browser
+- **🔒 Secure**: All processing happens locally - no data uploaded
+- **⚡ Full Features**: Complete bidirectional conversion capabilities
+- **📊 Professional Reports**: Comprehensive HTML reports with metadata
+
+### When to Use Each Version:
+| Feature | **Desktop (Python)** | **Web-Based** |
+|---------|---------------------|---------------|
+| **Installation** | Python required | None - just open HTML |
+| **Platform** | Windows/Mac/Linux | Any device with browser |
+| **File Access** | Full file system | Browser downloads |
+| **Performance** | System native | Browser optimized |
+| **Best For** | Power users, developers | Quick use, restricted systems |
+
+**💡 Tip**: Try the web version first! If you need advanced features or prefer desktop integration, use the Python version.
 
 ## 💻 How to Use
 
@@ -51,19 +79,25 @@ Double-click on: **`LAUNCH_GUI.py`**
 ## 📁 What's In This Package
 
 - **`README.md`** - This instruction file
-- **`SETUP.py`** - One-time setup installer
-- **`LAUNCH_GUI.py`** - Application launcher
+- **`SETUP.py`** - One-time setup installer  
+- **`LAUNCH_GUI.py`** - Application launcher (Python version)
 - **`LICENSE`** - AGPL v3 License terms
+- **`web-based_SimplifiedGUI/`** - Professional web-based GUI (no installation required)
 - **`project/`** - Technical files and documentation
 
 ## 📁 Project Structure
 
 **Root Directory (End Users):** Simple, clean files for non-technical users
-- `LAUNCH_GUI.py` - Double-click to start the application  
-- `setup.py` - One-time setup checker
+- `LAUNCH_GUI.py` - Double-click to start the Python desktop application  
+- `setup.py` - One-time setup checker for Python version
 - `README.md` - This documentation
 - `LICENSE` - AGPL v3.0 license
+- `web-based_SimplifiedGUI/` - Professional web-based GUI (no Python required)
 - `.gitignore` - Git configuration (for developers)
+
+**Web-Based GUI Directory:** Zero-installation professional interface
+- `web-based_SimplifiedGUI/LAUNCH_SimplifiedGUI.html` - Professional web-based converter
+- `web-based_SimplifiedGUI/web-based_README.md` - Web version documentation
 
 **Project Directory (Developers):** All development tools and advanced features
 - `project/base64_image_converter/` - Core application package

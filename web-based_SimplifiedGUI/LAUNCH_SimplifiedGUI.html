@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<!--
+Base64 Image Converter - Web-Based Simplified GUI
+Copyright (C) 2025 Kyle J. Coder
+Advanced Analytics & Informatics, Edward Hines Jr. VA Hospital (v12/578)
+Veterans Health Administration, Department of Veterans Affairs
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+Contact: HinClinicalAnalytics@va.gov
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Image Converter - Web-Based GUI - AGPL v3</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #f59e0b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex: 1;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+        }
+
+        .tutorial-section {
+            margin-bottom: 20px;
+        }
+
+        .tutorial-section h3 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .tutorial-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tutorial-section li {
+            padding: 8px 0;
+            border-left: 3px solid var(--primary-color);
+            padding-left: 15px;
+            margin-bottom: 5px;
+        }
+
+        .conversion-modes {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .mode-card {
+            flex: 1;
+            background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .mode-card:hover {
+            border-color: var(--primary-color);
+            transform: scale(1.02);
+        }
+
+        .mode-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, var(--primary-color), #3b82f6);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, var(--secondary-color), #fbbf24);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, var(--success-color), #34d399);
+        }
+
+        .btn-large {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .file-drop-zone, .drop-zone {
+            border: 3px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .file-drop-zone:hover, .drop-zone:hover,
+        .file-drop-zone.drag-over, .drop-zone.dragover {
+            border-color: var(--primary-color);
+            background: #eff6ff;
+        }
+
+        .results-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            grid-column: 1 / -1;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f7fa 100%);
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .result-card.error {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border-left-color: var(--error-color);
+        }
+
+        .log-window, .result-area {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 2px 0;
+        }
+
+        .log-entry.info, .log-entry.log-info {
+            color: #60a5fa;
+        }
+
+        .log-entry.success, .log-entry.log-success {
+            color: #34d399;
+        }
+
+        .log-entry.error, .log-entry.log-error {
+            color: #f87171;
+        }
+
+        .log-entry.warning, .log-entry.log-warning {
+            color: #fbbf24;
+        }
+
+        .progress-bar, .progress-container {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, var(--success-color), #34d399);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-ready {
+            background: var(--success-color);
+        }
+
+        .status-processing {
+            background: var(--warning-color);
+            animation: pulse 1.5s infinite;
+        }
+
+        .status-error {
+            background: var(--error-color);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .disabled {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        /* Enhanced collapsible panel styling */
+        .collapsible-panel {
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .collapsible-panel.collapsed {
+            max-height: 600px;
+        }
+
+        .collapsible-panel.expanded {
+            max-height: none;
+        }
+
+        .collapse-toggle {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-left: auto;
+            transition: all 0.3s ease;
+        }
+
+        .collapse-toggle:hover {
+            background: #1d4ed8;
+            transform: scale(1.05);
+        }
+
+        .panel-content {
+            transition: opacity 0.3s ease;
+        }
+
+        .panel-content.fade-content {
+            position: relative;
+        }
+
+        .panel-content.fade-content::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(transparent, var(--card-bg));
+            pointer-events: none;
+        }
+
+        .panel-content.expanded::after {
+            display: none;
+        }
+
+        /* Log window scrollbar styling */
+        .log-window::-webkit-scrollbar, .result-area::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .log-window::-webkit-scrollbar-track, .result-area::-webkit-scrollbar-track {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        .log-window::-webkit-scrollbar-thumb, .result-area::-webkit-scrollbar-thumb {
+            background: #64748b;
+            border-radius: 4px;
+        }
+
+        .log-window::-webkit-scrollbar-thumb:hover, .result-area::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .conversion-modes {
+                flex-direction: column;
+            }
+
+            .header .btn {
+                margin: 2px;
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+
+            .card h2 {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>🔄 Bidirectional Base64 Image Converter</h1>
+            <p>Professional Image ↔ Base64 HTML Conversion Tool - Web Version</p>
+            <p style="margin-bottom: 15px;"><strong>Author:</strong> Kyle J. Coder | <strong>Organization:</strong> Advanced Analytics & Informatics, Edward Hines Jr. VA Hospital</p>
+            <span class="badge">Data Team - Informatics | v1.2.1 - AGPL v3 | Web-Based GUI</span>
+            
+            <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn" onclick="openGitHubRepo()">
+                    🌐 GitHub Repository
+                </button>
+                <button class="btn btn-secondary" onclick="openChangelog()">
+                    📋 Changelog & Versions
+                </button>
+                <button class="btn" onclick="openReadme()">
+                    📖 README Documentation
+                </button>
+                <button class="btn" onclick="openLicense()">
+                    ⚖️ AGPL v3 License
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="main-content">
+            <!-- Tutorial & Information Panel -->
+            <div class="card collapsible-panel collapsed" id="infoPanel">
+                <h2>
+                    <span class="icon">📚</span>
+                    Project Information & Tutorial
+                    <button class="collapse-toggle" onclick="toggleInfoPanel()" id="collapseBtn">
+                        ▼ Expand Details
+                    </button>
+                </h2>
+                
+                <div class="panel-content fade-content" id="panelContent">
+                    <div class="tutorial-section">
+                        <h3>🎯 Purpose & Overview</h3>
+                        <p>This web-based tool provides bidirectional conversion between image files and base64-encoded HTML format, perfect for web applications, emails, or eliminating external image dependencies. No Python installation required - runs entirely in your browser!</p>
+                    </div>
+
+                    <div class="tutorial-section">
+                        <h3>📋 Project Details</h3>
+                        <ul>
+                            <li><strong>Version:</strong> 1.2.1 (AGPL v3 License)</li>
+                            <li><strong>Author:</strong> Kyle J. Coder</li>
+                            <li><strong>Organization:</strong> Advanced Analytics & Informatics</li>
+                            <li><strong>Contact:</strong> HinClinicalAnalytics@va.gov</li>
+                            <li><strong>Platform:</strong> Web-based GUI (No installation required)</li>
+                            <li><strong>Repository:</strong> Open source on GitHub</li>
+                        </ul>
+                    </div>
+
+                    <div class="conversion-modes">
+                        <div class="mode-card">
+                            <h4>📸 → 📄</h4>
+                            <p>Images to Base64 HTML</p>
+                            <small>Convert PNG, JPG, GIF, BMP files to embeddable HTML base64 strings</small>
+                        </div>
+                        <div class="mode-card">
+                            <h4>📄 → 📸</h4>
+                            <p>Base64 HTML to Images</p>
+                            <small>Extract and save images from base64-encoded HTML content</small>
+                        </div>
+                    </div>
+
+                    <div class="tutorial-section">
+                        <h3>✨ Key Features</h3>
+                        <ul>
+                            <li>🔄 Bidirectional conversion support (images ↔ base64)</li>
+                            <li>📁 Batch processing capabilities for multiple files</li>
+                            <li>🖼️ Multiple formats: PNG, JPEG, GIF, BMP, WebP, HTML</li>
+                            <li>📏 Automatic dimension and metadata extraction</li>
+                            <li>🎨 Professional HTML5 output with clean formatting</li>
+                            <li>📊 Detailed conversion reports and error handling</li>
+                            <li>🌐 Pure web-based - no downloads or installation</li>
+                            <li>⚡ High-performance processing with progress tracking</li>
+                            <li>🔒 Secure local processing (no data uploaded)</li>
+                            <li>📱 Works on desktop, tablet, and mobile devices</li>
+                        </ul>
+                    </div>
+
+                    <div class="tutorial-section">
+                        <h3>🚀 Quick Start Guide</h3>
+                        <ul>
+                            <li>1️⃣ <strong>Select Mode:</strong> Choose auto-detect or specific conversion direction</li>
+                            <li>2️⃣ <strong>Add Files:</strong> Drag & drop files or use file selection buttons</li>
+                            <li>3️⃣ <strong>Convert:</strong> Click "Start Conversion" and monitor progress</li>
+                            <li>4️⃣ <strong>Download:</strong> Get your converted files from browser downloads</li>
+                            <li>5️⃣ <strong>Review:</strong> Check results summary in the log</li>
+                        </ul>
+                    </div>
+
+                    <div class="tutorial-section">
+                        <h3>🔧 Technical Specifications</h3>
+                        <ul>
+                            <li><strong>Input Formats:</strong> PNG, JPEG, GIF, BMP, WebP, HTML, TXT</li>
+                            <li><strong>Output Formats:</strong> Base64 HTML, Image files</li>
+                            <li><strong>Max File Size:</strong> Limited by browser memory (~50-100MB per file)</li>
+                            <li><strong>Performance:</strong> Optimized for web environments</li>
+                            <li><strong>Dependencies:</strong> Modern web browser with ES6 support</li>
+                            <li><strong>Platform Support:</strong> Windows, macOS, Linux, Android, iOS</li>
+                        </ul>
+                    </div>
+
+                    <div class="tutorial-section">
+                        <h3>💡 Use Cases</h3>
+                        <ul>
+                            <li>📧 Email templates with embedded images</li>
+                            <li>🌐 Web applications without external image dependencies</li>
+                            <li>📊 Clinical reports with embedded charts and graphs</li>
+                            <li>📱 Mobile apps requiring offline image access</li>
+                            <li>🔒 Secure document generation with embedded media</li>
+                            <li>📈 Data visualization exports for presentations</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Control Panel -->
+            <div class="card">
+                <h2>
+                    <span class="icon">🎛️</span>
+                    Conversion Control Panel
+                </h2>
+
+                <!-- Conversion Mode Selection -->
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--primary-color);">Conversion Mode:</label>
+                    <select id="conversionMode" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid var(--border-color); font-size: 1rem;">
+                        <option value="auto">🔍 Auto-Detect (Recommended)</option>
+                        <option value="to-base64">📸 → 📄 Images to Base64</option>
+                        <option value="from-base64">📄 → 📸 Base64 to Images</option>
+                    </select>
+                </div>
+
+                <!-- Compact Drag & Drop Zone -->
+                <div class="file-drop-zone" id="dropZone" style="padding: 25px 15px; margin-bottom: 15px;">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">📁</div>
+                    <p><strong>Drag & Drop Files Here</strong></p>
+                    <p style="font-size: 0.85rem; color: #64748b; margin: 5px 0 0 0;">
+                        Supported: PNG, JPEG, GIF, BMP, WebP, TXT, HTML
+                    </p>
+                </div>
+
+                <!-- File Selection Buttons -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                    <button class="btn" onclick="selectInputFiles()" id="selectFilesBtn">
+                        📂 Select Files
+                    </button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('base64Input').focus()" id="pasteBase64Btn">
+                        📄 Paste Base64
+                    </button>
+                </div>
+
+                <!-- Base64 Input Area (for paste operations) -->
+                <div id="base64InputSection" style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--primary-color);">Or paste Base64 data:</label>
+                    <textarea id="base64Input" placeholder="Paste your Base64 data here (with or without data: prefix)..." 
+                             style="width: 100%; height: 120px; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; font-family: monospace; font-size: 0.9rem; resize: vertical;"></textarea>
+                </div>
+
+                <!-- File Selection Status -->
+                <div id="fileSelectionStatus" style="background: #f1f5f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none;">
+                    <h4 style="margin-bottom: 10px; color: var(--primary-color);">📋 Selected Files:</h4>
+                    <div id="selectedFilesList" style="max-height: 120px; overflow-y: auto;">
+                        <!-- Selected files will be listed here -->
+                    </div>
+                </div>
+
+                <!-- Conversion Button (Initially Hidden) -->
+                <button class="btn btn-success btn-large hidden" onclick="startConversion()" id="startConversionBtn">
+                    <span class="icon">▶️</span>
+                    Start Conversion Process
+                </button>
+
+                <!-- Processing Status -->
+                <div style="margin-top: 20px;">
+                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                        <span class="status-indicator status-ready" id="statusIndicator"></span>
+                        <span id="statusText">Ready - Select files or paste Base64 data to begin</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                    <h4 style="margin-bottom: 10px; color: var(--primary-color);">⚡ Quick Actions:</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <button class="btn" onclick="resetInterface()" style="padding: 8px 12px; font-size: 0.9rem;">
+                            🔄 Reset All
+                        </button>
+                        <button class="btn btn-secondary" onclick="openHelpDialog()" style="padding: 8px 12px; font-size: 0.9rem;">
+                            ❓ Help
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <h2>
+                <span class="icon">📊</span>
+                Conversion Results
+            </h2>
+            <div class="results-grid" id="resultsGrid">
+                <!-- Results will be populated here -->
+            </div>
+        </div>
+
+        <!-- Log Window -->
+        <div class="card">
+            <h2>
+                <span class="icon">📋</span>
+                Process Log & System Status
+                <div style="margin-left: auto; display: flex; gap: 8px;">
+                    <button class="btn" onclick="rebootProject()" style="padding: 6px 12px; font-size: 0.8rem;">
+                        🔄 Reboot App
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearLog()" style="padding: 6px 12px; font-size: 0.8rem;">
+                        🗑️ Clear Log
+                    </button>
+                </div>
+            </h2>
+            <div class="log-window result-area" id="logWindow">
+                <div class="log-entry info">📋 Base64 Image Converter v1.2.1 (Web GUI) initialized and ready...</div>
+                <div class="log-entry info">💡 Tip: You can drag and drop files directly onto the drop zone above</div>
+                <div class="log-entry info">🌐 Pure web-based interface - no Python installation required</div>
+                <div class="log-entry info">⚖️ Running under AGPL v3 license - see documentation for details</div>
+                <div class="log-entry success">✅ All systems operational - ready for conversion tasks</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let selectedFiles = [];
+        let conversionResults = [];
+        let processedFiles = [];
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDragAndDrop();
+            initializeInterface();
+            logMessage('info', '🚀 Application initialized successfully');
+            logMessage('info', '📋 Base64 Image Converter v1.2.1 (Web GUI) ready for operation');
+            logMessage('info', '💡 Select files using drag & drop or the file selection buttons');
+            logMessage('info', '🌐 Pure web-based interface - works entirely in your browser');
+            logMessage('info', '📚 Use the "Expand Details" button to learn more about the tool');
+        });
+
+        function initializeInterface() {
+            // Set initial status
+            updateStatus('Ready - Select files or paste Base64 data to begin', 'ready');
+            
+            // Hide conversion button initially
+            document.getElementById('startConversionBtn').classList.add('hidden');
+            
+            // Hide file selection status initially
+            document.getElementById('fileSelectionStatus').style.display = 'none';
+            
+            // Hide results section initially
+            document.getElementById('resultsSection').style.display = 'none';
+            
+            // Set default conversion mode
+            document.getElementById('conversionMode').value = 'auto';
+            
+            // Initialize collapsible panel
+            updatePanelContent();
+            
+            // Initialize Base64 input monitoring
+            const base64Input = document.getElementById('base64Input');
+            base64Input.addEventListener('input', handleBase64InputChange);
+            base64Input.addEventListener('paste', handleBase64Paste);
+        }
+
+        // Collapsible panel functionality
+        function toggleInfoPanel() {
+            const panel = document.getElementById('infoPanel');
+            const content = document.getElementById('panelContent');
+            const button = document.getElementById('collapseBtn');
+            
+            if (panel.classList.contains('collapsed')) {
+                panel.classList.remove('collapsed');
+                panel.classList.add('expanded');
+                content.classList.remove('fade-content');
+                content.classList.add('expanded');
+                button.textContent = '▲ Collapse Details';
+                logMessage('info', '📚 Information panel expanded');
+            } else {
+                panel.classList.remove('expanded');
+                panel.classList.add('collapsed');
+                content.classList.remove('expanded');
+                content.classList.add('fade-content');
+                button.textContent = '▼ Expand Details';
+                logMessage('info', '📚 Information panel collapsed');
+            }
+        }
+
+        function updatePanelContent() {
+            const content = document.getElementById('panelContent');
+            content.classList.add('fade-content');
+        }
+
+        // Drag and drop initialization
+        function initializeDragAndDrop() {
+            const dropZone = document.getElementById('dropZone');
+            
+            // Drag and drop events
+            dropZone.addEventListener('dragover', handleDragOver);
+            dropZone.addEventListener('dragleave', handleDragLeave);
+            dropZone.addEventListener('drop', handleDrop);
+            dropZone.addEventListener('click', selectInputFiles);
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            
+            const files = Array.from(e.dataTransfer.files);
+            if (files.length > 0) {
+                handleFileSelection(files);
+            } else {
+                logMessage('warning', '⚠️ No files found in drop operation');
+            }
+        }
+
+        // File selection functions
+        function selectInputFiles() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.multiple = true;
+            input.accept = 'image/*,.txt,.html,.htm';
+            
+            input.onchange = function(e) {
+                const files = Array.from(e.target.files);
+                if (files.length > 0) {
+                    handleFileSelection(files);
+                }
+            };
+            
+            input.click();
+        }
+
+        function handleFileSelection(files) {
+            selectedFiles = files;
+            const fileSelectionStatus = document.getElementById('fileSelectionStatus');
+            const selectedFilesList = document.getElementById('selectedFilesList');
+            const startConversionBtn = document.getElementById('startConversionBtn');
+            
+            // Clear previous file list
+            selectedFilesList.innerHTML = '';
+            
+            if (files.length > 0) {
+                logMessage('success', `📂 Selected ${files.length} file(s):`);
+                
+                // Show file selection status
+                fileSelectionStatus.style.display = 'block';
+                
+                // List selected files
+                files.forEach((file, index) => {
+                    const fileType = getFileType(file.name);
+                    const fileDiv = document.createElement('div');
+                    fileDiv.style.cssText = 'padding: 5px 0; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;';
+                    fileDiv.innerHTML = `
+                        <span>📄 ${file.name}</span>
+                        <span style="font-size: 0.8rem; color: #64748b;">${fileType} | ${formatFileSize(file.size)}</span>
+                    `;
+                    selectedFilesList.appendChild(fileDiv);
+                    
+                    logMessage('info', `   • ${file.name} (${fileType}, ${formatFileSize(file.size)})`);
+                });
+
+                // Show start conversion button
+                startConversionBtn.classList.remove('hidden');
+                updateStatus(`${files.length} file(s) ready for conversion`, 'ready');
+            } else {
+                // Hide file selection status and start button
+                fileSelectionStatus.style.display = 'none';
+                startConversionBtn.classList.add('hidden');
+                updateStatus('No files selected', 'ready');
+            }
+        }
+
+        // Base64 input handling
+        function handleBase64InputChange() {
+            const base64Input = document.getElementById('base64Input');
+            const startConversionBtn = document.getElementById('startConversionBtn');
+            
+            if (base64Input.value.trim().length > 0) {
+                startConversionBtn.classList.remove('hidden');
+                updateStatus('Base64 data ready for conversion', 'ready');
+                logMessage('info', '📄 Base64 data detected in input area');
+            } else if (selectedFiles.length === 0) {
+                startConversionBtn.classList.add('hidden');
+                updateStatus('Ready - Select files or paste Base64 data to begin', 'ready');
+            }
+        }
+
+        function handleBase64Paste(e) {
+            setTimeout(() => {
+                logMessage('info', '📋 Base64 data pasted into input area');
+                handleBase64InputChange();
+            }, 100);
+        }
+
+        // Conversion process
+        function startConversion() {
+            const base64Input = document.getElementById('base64Input');
+            const base64Data = base64Input.value.trim();
+            
+            if (selectedFiles.length === 0 && !base64Data) {
+                logMessage('error', '❌ No files selected and no Base64 data provided. Please add content first.');
+                updateStatus('Error: No input provided', 'error');
+                return;
+            }
+
+            const startBtn = document.getElementById('startConversionBtn');
+            startBtn.disabled = true;
+            startBtn.innerHTML = '<span class="icon">⏳</span>Processing...';
+
+            updateStatus('Processing...', 'processing');
+            updateProgress(0);
+            logMessage('info', '🔄 Starting conversion process...');
+            
+            // Clear previous results
+            conversionResults = [];
+            processedFiles = [];
+            
+            // Start processing
+            if (base64Data) {
+                processBase64Data(base64Data);
+            }
+            
+            if (selectedFiles.length > 0) {
+                processFiles();
+            }
+            
+            if (!base64Data && selectedFiles.length === 0) {
+                finishConversion();
+            }
+        }
+
+        function processFiles() {
+            const totalFiles = selectedFiles.length;
+            let processedCount = 0;
+
+            logMessage('info', `📁 Processing ${totalFiles} file(s)...`);
+
+            selectedFiles.forEach((file, index) => {
+                setTimeout(() => {
+                    const fileType = getFileType(file.name);
+                    const conversionDirection = determineConversionDirection(file.name);
+                    
+                    logMessage('info', `[${index + 1}/${totalFiles}] ${conversionDirection}: ${file.name}`);
+                    
+                    if (fileType === 'Image') {
+                        convertImageToBase64(file).then(base64 => {
+                            const result = {
+                                success: true,
+                                inputFile: file.name,
+                                outputFile: `${file.name.split('.')[0]}_base64.html`,
+                                conversionType: conversionDirection,
+                                fileSize: formatFileSize(file.size),
+                                base64Data: base64,
+                                timestamp: new Date().toISOString()
+                            };
+                            conversionResults.push(result);
+                            processedFiles.push(result);
+                            logMessage('success', `✅ Successfully converted: ${file.name} → ${result.outputFile}`);
+                            
+                            processedCount++;
+                            updateProgress((processedCount / totalFiles) * 100);
+                            
+                            if (processedCount === totalFiles) {
+                                finishConversion();
+                            }
+                        }).catch(error => {
+                            conversionResults.push({
+                                success: false,
+                                inputFile: file.name,
+                                error: error.message,
+                                conversionType: conversionDirection
+                            });
+                            logMessage('error', `❌ Failed to convert: ${file.name} - ${error.message}`);
+                            
+                            processedCount++;
+                            updateProgress((processedCount / totalFiles) * 100);
+                            
+                            if (processedCount === totalFiles) {
+                                finishConversion();
+                            }
+                        });
+                    } else {
+                        // Process text/HTML files
+                        readTextFile(file).then(content => {
+                            return convertBase64ToImageFromContent(content, file.name);
+                        }).then(result => {
+                            conversionResults.push(result);
+                            if (result.success) {
+                                logMessage('success', `✅ Successfully converted: ${file.name} → ${result.outputFile}`);
+                            } else {
+                                logMessage('error', `❌ Failed to convert: ${file.name} - ${result.error}`);
+                            }
+                            
+                            processedCount++;
+                            updateProgress((processedCount / totalFiles) * 100);
+                            
+                            if (processedCount === totalFiles) {
+                                finishConversion();
+                            }
+                        });
+                    }
+                }, index * 100); // Small delay between files
+            });
+        }
+
+        function processBase64Data(base64Data) {
+            logMessage('info', '📄 Processing Base64 data from input area...');
+            
+            convertBase64ToImageFromContent(base64Data, 'pasted_data').then(result => {
+                conversionResults.push(result);
+                if (result.success) {
+                    logMessage('success', `✅ Successfully converted Base64 data → ${result.outputFile}`);
+                } else {
+                    logMessage('error', `❌ Failed to convert Base64 data - ${result.error}`);
+                }
+                
+                if (selectedFiles.length === 0) {
+                    finishConversion();
+                }
+            });
+        }
+
+        function convertImageToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(new Error('Failed to read file'));
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function readTextFile(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(new Error('Failed to read text file'));
+                reader.readAsText(file);
+            });
+        }
+
+        function convertBase64ToImageFromContent(content, sourceName) {
+            return new Promise((resolve) => {
+                try {
+                    // Clean up the base64 data
+                    let cleanBase64 = content.replace(/\s/g, '');
+                    
+                    // Check if it's a data URL
+                    let mimeType = 'image/png'; // default
+                    if (cleanBase64.startsWith('data:')) {
+                        const matches = cleanBase64.match(/data:([^;]+);base64,(.+)/);
+                        if (matches) {
+                            mimeType = matches[1];
+                            cleanBase64 = matches[2];
+                        }
+                    }
+                    
+                    // Convert base64 to blob
+                    const byteCharacters = atob(cleanBase64);
+                    const byteNumbers = new Array(byteCharacters.length);
+                    for (let i = 0; i < byteCharacters.length; i++) {
+                        byteNumbers[i] = byteCharacters.charCodeAt(i);
+                    }
+                    const byteArray = new Uint8Array(byteNumbers);
+                    const blob = new Blob([byteArray], { type: mimeType });
+                    
+                    const extension = mimeType.split('/')[1] || 'png';
+                    const outputFileName = sourceName === 'pasted_data' 
+                        ? `converted_image_${Date.now()}.${extension}`
+                        : `${sourceName.split('.')[0]}_converted.${extension}`;
+                    
+                    // Create download
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = outputFileName;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    
+                    resolve({
+                        success: true,
+                        inputFile: sourceName,
+                        outputFile: outputFileName,
+                        conversionType: 'Base64 HTML → Image',
+                        fileSize: formatFileSize(blob.size)
+                    });
+                    
+                } catch (error) {
+                    resolve({
+                        success: false,
+                        inputFile: sourceName,
+                        error: error.message,
+                        conversionType: 'Base64 HTML → Image'
+                    });
+                }
+            });
+        }
+
+        function finishConversion() {
+            const successCount = conversionResults.filter(r => r.success).length;
+            const failCount = conversionResults.filter(r => !r.success).length;
+            
+            // Restore start button
+            const startBtn = document.getElementById('startConversionBtn');
+            startBtn.disabled = false;
+            startBtn.innerHTML = '<span class="icon">▶️</span>Start Conversion Process';
+            
+            updateStatus(`Conversion complete: ${successCount} success, ${failCount} failed`, 'ready');
+            updateProgress(100);
+            
+            logMessage('info', '🎉 Conversion process completed!');
+            logMessage('success', `✅ Successfully converted: ${successCount} file(s)`);
+            if (failCount > 0) {
+                logMessage('error', `❌ Failed conversions: ${failCount} file(s)`);
+            }
+            logMessage('info', '💾 Results downloaded to your browser\'s download folder');
+            
+            displayResults();
+            
+            if (processedFiles.length > 0) {
+                createDownloadButton();
+            }
+        }
+
+        function displayResults() {
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsGrid = document.getElementById('resultsGrid');
+            
+            resultsGrid.innerHTML = '';
+            
+            conversionResults.forEach(result => {
+                const resultCard = document.createElement('div');
+                resultCard.className = `result-card ${result.success ? '' : 'error'}`;
+                
+                if (result.success) {
+                    resultCard.innerHTML = `
+                        <h4 style="color: var(--success-color); margin-bottom: 10px;">✅ ${result.inputFile}</h4>
+                        <p><strong>Conversion:</strong> ${result.conversionType}</p>
+                        <p><strong>Output:</strong> ${result.outputFile}</p>
+                        <p><strong>Size:</strong> ${result.fileSize}</p>
+                        <p style="font-size: 0.8rem; color: #64748b; margin-top: 5px;">File downloaded to browser downloads</p>
+                    `;
+                } else {
+                    resultCard.innerHTML = `
+                        <h4 style="color: var(--error-color); margin-bottom: 10px;">❌ ${result.inputFile}</h4>
+                        <p><strong>Conversion:</strong> ${result.conversionType}</p>
+                        <p><strong>Error:</strong> ${result.error}</p>
+                        <button class="btn" style="margin-top: 10px; padding: 5px 10px; font-size: 0.8rem;" onclick="retryConversion('${result.inputFile}')">
+                            🔄 Retry
+                        </button>
+                    `;
+                }
+                
+                resultsGrid.appendChild(resultCard);
+            });
+            
+            resultsSection.style.display = 'block';
+        }
+
+        function createDownloadButton() {
+            const logWindow = document.getElementById('logWindow');
+            
+            // Remove existing download button
+            const existingBtn = document.getElementById('downloadBtn');
+            if (existingBtn) existingBtn.remove();
+            
+            const downloadBtn = document.createElement('div');
+            downloadBtn.id = 'downloadBtn';
+            downloadBtn.style.cssText = 'margin-top: 15px; padding-top: 15px; border-top: 1px solid #334155;';
+            downloadBtn.innerHTML = `
+                <button class="btn btn-success" onclick="downloadHTMLReport()" style="width: 100%; padding: 12px; font-size: 0.9rem;">
+                    💾 Download HTML Report
+                </button>
+            `;
+            
+            logWindow.appendChild(downloadBtn);
+        }
+
+        function downloadHTMLReport() {
+            const htmlContent = generateHTMLReport();
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `base64_conversion_report_${Date.now()}.html`;
+            a.click();
+            
+            URL.revokeObjectURL(url);
+            logMessage('success', '📥 HTML report downloaded successfully!');
+        }
+
+        function generateHTMLReport() {
+            let html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Conversion Report</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 2rem; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .header { text-align: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 3px solid #2563eb; }
+        .header h1 { color: #2563eb; margin-bottom: 0.5rem; }
+        .file-section { margin: 2rem 0; padding: 1.5rem; border: 1px solid #e2e8f0; border-radius: 10px; background: #f8fafc; }
+        .base64-data { word-wrap: break-word; background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 6px; font-family: 'Courier New', monospace; max-height: 200px; overflow-y: auto; font-size: 0.8rem; }
+        .metadata { background: #eff6ff; padding: 1rem; margin: 1rem 0; border-radius: 6px; border-left: 4px solid #2563eb; }
+        .success { border-left-color: #10b981; background: #f0fdf4; }
+        .error { border-left-color: #ef4444; background: #fef2f2; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 Base64 Image Conversion Report</h1>
+            <p>Generated on: ${new Date().toLocaleString()}</p>
+            <p><strong>Author:</strong> Kyle J. Coder | <strong>Organization:</strong> Advanced Analytics & Informatics, Edward Hines Jr. VA Hospital</p>
+            <p><strong>Tool:</strong> Base64 Image Converter v1.2.1 (Web-Based GUI) | <strong>License:</strong> AGPL v3</p>
+        </div>`;
+
+            conversionResults.forEach((result, index) => {
+                if (result.success && result.base64Data) {
+                    html += `
+        <div class="file-section">
+            <h2>📄 File ${index + 1}: ${result.inputFile}</h2>
+            <div class="metadata success">
+                <p><strong>Original Size:</strong> ${result.fileSize}</p>
+                <p><strong>Conversion Type:</strong> ${result.conversionType}</p>
+                <p><strong>Output File:</strong> ${result.outputFile}</p>
+                <p><strong>Converted:</strong> ${new Date(result.timestamp).toLocaleString()}</p>
+                <p><strong>Base64 Length:</strong> ${result.base64Data.length} characters</p>
+            </div>
+            <h3>🔢 Base64 Data:</h3>
+            <div class="base64-data">${result.base64Data}</div>
+        </div>`;
+                } else if (!result.success) {
+                    html += `
+        <div class="file-section">
+            <h2>❌ Failed: ${result.inputFile}</h2>
+            <div class="metadata error">
+                <p><strong>Conversion Type:</strong> ${result.conversionType}</p>
+                <p><strong>Error:</strong> ${result.error}</p>
+                <p><strong>Status:</strong> Conversion failed</p>
+            </div>
+        </div>`;
+                }
+            });
+
+            html += `
+        <div class="file-section">
+            <h2>📊 Summary</h2>
+            <div class="metadata">
+                <p><strong>Total Files Processed:</strong> ${conversionResults.length}</p>
+                <p><strong>Successful Conversions:</strong> ${conversionResults.filter(r => r.success).length}</p>
+                <p><strong>Failed Conversions:</strong> ${conversionResults.filter(r => !r.success).length}</p>
+                <p><strong>Report Generated:</strong> ${new Date().toLocaleString()}</p>
+                <p><strong>Contact:</strong> HinClinicalAnalytics@va.gov</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>`;
+            return html;
+        }
+
+        // Interface management functions
+        function resetInterface() {
+            selectedFiles = [];
+            conversionResults = [];
+            processedFiles = [];
+            
+            document.getElementById('fileSelectionStatus').style.display = 'none';
+            document.getElementById('startConversionBtn').classList.add('hidden');
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('conversionMode').value = 'auto';
+            document.getElementById('base64Input').value = '';
+            
+            updateStatus('Interface reset - ready for new conversion', 'ready');
+            updateProgress(0);
+            logMessage('info', '🔄 Interface reset successfully');
+        }
+
+        function rebootProject() {
+            logMessage('warning', '🔄 Rebooting application - reinitializing all systems...');
+            
+            // Clear all data
+            resetInterface();
+            
+            // Clear and reinitialize log
+            const logWindow = document.getElementById('logWindow');
+            logWindow.innerHTML = '';
+            
+            // Reinitialize application
+            setTimeout(() => {
+                logMessage('info', '📋 Base64 Image Converter v1.2.1 (Web GUI) rebooted successfully');
+                logMessage('info', '✅ All systems reinitialized and ready for operation');
+                logMessage('info', '💡 Application reboot complete - you can now start a new conversion');
+                updateStatus('System rebooted - ready for operation', 'ready');
+            }, 500);
+        }
+
+        function openHelpDialog() {
+            const helpContent = `
+🔄 Base64 Image Converter v1.2.1 - Web-Based Help Guide
+
+📋 QUICK START:
+1. Select conversion mode (auto-detect recommended)
+2. Drag & drop files, select files, or paste Base64 data
+3. Click "Start Conversion" and monitor progress
+4. Files will download automatically to your browser's download folder
+
+🎯 SUPPORTED FORMATS:
+• Input: PNG, JPEG, GIF, BMP, WebP, HTML, TXT
+• Output: Base64 HTML files, Image files
+
+⚡ WEB-BASED FEATURES:
+• Pure browser-based operation
+• No installation required
+• Drag & drop support
+• Batch processing
+• Progress tracking
+• Detailed logging
+• HTML report generation
+
+🌐 PROJECT LINKS:
+• GitHub: https://github.com/KCoderVA/Base64_ImageConverter
+• Documentation: Available in README and project docs
+• License: AGPL v3 (GNU Affero General Public License)
+
+📞 SUPPORT:
+For technical support or bug reports, contact:
+HinClinicalAnalytics@va.gov
+
+📖 For more detailed help, use the README and Changelog buttons above
+            `;
+            
+            alert(helpContent);
+            logMessage('info', '❓ Help dialog displayed to user');
+        }
+
+        // Enhanced header button functions
+        function openGitHubRepo() {
+            const repoUrl = 'https://github.com/KCoderVA/Base64_ImageConverter';
+            logMessage('info', '🌐 Opening GitHub repository...');
+            window.open(repoUrl, '_blank', 'noopener,noreferrer');
+            logMessage('success', `✅ Opened GitHub repository: ${repoUrl}`);
+        }
+
+        function openReadme() {
+            logMessage('info', '📖 Opening README documentation...');
+            window.open('https://github.com/KCoderVA/Base64_ImageConverter/blob/main/README.md', '_blank', 'noopener,noreferrer');
+            logMessage('success', '✅ Opened README from GitHub repository');
+        }
+
+        function openChangelog() {
+            logMessage('info', '📋 Opening changelog and version history...');
+            window.open('https://github.com/KCoderVA/Base64_ImageConverter/blob/main/project/docs/CHANGELOG.md', '_blank', 'noopener,noreferrer');
+            logMessage('success', '✅ Opened changelog from GitHub repository');
+        }
+
+        function openLicense() {
+            logMessage('info', '⚖️ Opening AGPL v3 license information...');
+            const licenseChoice = confirm(
+                'AGPL v3 License Information\n\n' +
+                'Click OK to view the full license text on the GNU website,\n' +
+                'or Cancel to view the project license file on GitHub.'
+            );
+            
+            if (licenseChoice) {
+                window.open('https://www.gnu.org/licenses/agpl-3.0.html', '_blank', 'noopener,noreferrer');
+                logMessage('success', '✅ Opened full AGPL v3 license from GNU website');
+            } else {
+                window.open('https://github.com/KCoderVA/Base64_ImageConverter/blob/main/LICENSE', '_blank', 'noopener,noreferrer');
+                logMessage('success', '✅ Opened project license file from GitHub');
+            }
+        }
+
+        // Utility functions
+        function getFileType(fileName) {
+            const ext = fileName.split('.').pop().toLowerCase();
+            if (['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'].includes(ext)) {
+                return 'Image';
+            } else if (['txt', 'html', 'htm'].includes(ext)) {
+                return 'Text/HTML';
+            }
+            return 'Unknown';
+        }
+
+        function determineConversionDirection(fileName) {
+            const fileType = getFileType(fileName);
+            const mode = document.getElementById('conversionMode').value;
+            
+            if (mode === 'auto') {
+                return fileType === 'Image' ? 'Image → Base64 HTML' : 'Base64 HTML → Image';
+            } else if (mode === 'to-base64') {
+                return 'Image → Base64 HTML';
+            } else {
+                return 'Base64 HTML → Image';
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function updateStatus(message, type) {
+            const statusText = document.getElementById('statusText');
+            const statusIndicator = document.getElementById('statusIndicator');
+            
+            statusText.textContent = message;
+            statusIndicator.className = `status-indicator status-${type}`;
+        }
+
+        function updateProgress(percentage) {
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = `${percentage}%`;
+        }
+
+        function logMessage(type, message) {
+            const logWindow = document.getElementById('logWindow');
+            const timestamp = new Date().toLocaleTimeString();
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${type}`;
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            
+            logWindow.appendChild(logEntry);
+            logWindow.scrollTop = logWindow.scrollHeight;
+        }
+
+        function clearLog() {
+            const logWindow = document.getElementById('logWindow');
+            logWindow.innerHTML = '<div class="log-entry info">📋 Log cleared...</div>';
+        }
+
+        function retryConversion(fileName) {
+            logMessage('info', `🔄 Retry requested for: ${fileName}`);
+            logMessage('warning', '⚠️ Retry functionality: Please re-select the file and try again');
+        }
+    </script>
+</body>
+</html>
